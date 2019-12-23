@@ -2,10 +2,18 @@ clf
 clc
 clear
 
-w=logspace(-1,1,200);%10^-1到10^1之间对数规律取200个数
+syms G s
 
-num=[0 0 2];%系统开环函数分子
-den=[1,3,2,0];%系统开环函数分母
+G=(2*s^0)/(1*s^3+3*s^2+2*s+0);%系统开环(闭环)方程(不是多项式展开形式)
+[num_s,den_s]=numden(G);%提取系统方程的分子分母(输出的数组是符号型的需要数据转换)
+
+num=double(coeffs(num_s,s,'all'));%系统开环函数分子(数据转换后)
+den=double(coeffs(den_s,s,'all'));%系统开环函数分母(数据转换后)
+
+% num=[0 2];%系统开环函数分子(系统方程已分解,可以直接得到)
+% den=[1,3,2,0];%系统开环函数分母(系统方程已分解,可以直接得到)
+
+w=logspace(-1,1,200);%10^-1到10^1之间对数规律取200个数
 
 figure(1),nyquist(num,den);%奈奎斯特
 
@@ -23,7 +31,7 @@ figure(3),step(num1,den1)%闭环阶跃相应
 % numc=[1]
 % denc=[1]
 % 
-% numaf=conv(num,numc)
+% numaf=conv(num,numc)%只能计算两个
 % denaf=conv(den,denc)
 % 
 % [numaf1,denaf1]=cloop(numaf,denaf)
@@ -37,13 +45,18 @@ figure(3),step(num1,den1)%闭环阶跃相应
 % subplot(2,2,3),step(numaf1,denaf1)
 
 
-% 其他函数
+% 其他函数(注意:有些函数的入口参数注意不能是符号型的而返回的是符号型的)
 % sys=tf(num,den)%得到系统sys
+%
+% conv(num,numc)%只能计算两个多项式系数数组相乘
+%
+% [n,d]=numden(G)%提取系统方程的分子分母
+% coeffs(G,s,'All') %多项式展开返回系数一维符号型数组(可计算多参数多项式)
+% sym2poly(G)%多项式展开(只可计算单参数多项式)逆向函数poly2sym()
 % sys=feedback(G,H)%(G,H需事先设定).其中G是传递函数,H为反馈函数,表示一个控制系统G,对其进行负反馈H(要求正反馈用-H),求闭环函数
-% 
+%
 % sys = parallel(sys1,sys2)%系统并联
 % sys = series(sys1,sys2)%系统串联
-%  
 %  
 % sys=zpk(z,p,k)%根据零极点建立系统函数(k为零极点增益)zpk([z1,z2],[p1,p2],k)
 % [z,p,k]=tf2zp(num,den)%多项式传递函数模型转换为零极点增益模型
