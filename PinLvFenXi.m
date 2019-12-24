@@ -23,26 +23,36 @@ figure(1),nyquist(num,den);%奈奎斯特
 
 figure(2),bode(num,den)%伯德图
 
-[num1,den1]=cloop(num,den);%求闭环系统函数
-figure(3),step(num1,den1)%闭环阶跃相应
+
+sys=tf(num,den);%系统方程
+sys1=feedback(sys,1);%系统单位负反馈
+figure(3),step(sys1);%闭环阶跃相应
+
+% cloop()函数已弃用,建议用feedback()函数
+% [num1,den1]=cloop(num,den);%求闭环系统函数
+% figure(3),step(num1,den1)%闭环阶跃相应
 
 
-%校正环节(或者额外增加的环节)
+
+
+% 校正环节(或者额外增加的环节)
 % numc=[1]
 % denc=[1]
 % 
 % numaf=conv(num,numc)%只能计算两个
 % denaf=conv(den,denc)
 % 
-% [numaf1,denaf1]=cloop(numaf,denaf)
-% 
 % [magaf,phaseaf,waf]=bode(numaf,denaf,w)
 % [Gmaf,Pmaf,Wcgaf,Wcpaf]=margin(magaf,phaseaf,w)
+% 
+% sysaf=tf(numaf,denaf);%校正后系统开环方程
+% sysc=feedback(sysaf,1);%系统单位负反馈
+% 
 % figure(4)
 % hold on
 % subplot(2,2,1),nyquist(numaf,denaf);
 % subplot(2,2,2),bode(numaf,denaf);
-% subplot(2,2,3),step(numaf1,denaf1)
+% subplot(2,2,3),step(sysc)
 
 
 % 其他函数(注意:有些函数的入口参数注意不能是符号型的而返回的是符号型的)
