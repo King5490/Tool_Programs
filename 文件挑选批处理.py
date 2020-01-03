@@ -21,15 +21,15 @@ def files_filter():
         for file in files:
             all_files.extend([file])
             if re.search('特征正则表达式1', file)and re.search('特征正则表达式2', file):
-                file_name = os.path.join(root, '"' + file + '"')
-                all_files.extend([file_name])
-                command = 'move ' + file_name + ' ' + path + '/挑选结果'
+                file_name = os.path.join(root, file)
+                command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/挑选结果' + '"'
                 if os.system(command):
                     print('\n' + file_name + ' 此文件移动失败(可能为隐藏文件)')
                     failed_num += 1
                 target_num += 1
 
-    print('从' + str(len(all_files)) + '个文件中挑选' + str(target_num) + '个特征文件,' + ' 其中失败了' + str(failed_num) + '文件.')
+    print('从' + str(len(all_files)) + '个文件中挑选' + str(target_num) +
+          '个特征文件,' + ' 其中失败了' + str(failed_num) + '文件.')
 
 
 files_filter()
