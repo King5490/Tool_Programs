@@ -37,7 +37,7 @@ def files_filter():
                 target_num += 1
 
             # 本处为自动鉴别语言,进行文件名英译中,可替换任意语言互译(相关语言简写见上文官方文档)
-            if translator.detect(file).lang == 'jw':
+            elif translator.detect(file).lang == 'jw':
                 point_before = file[0:file.find('.')]
                 point_after = file[file.find('.'):len(file)]
                 file_rename = translator.translate(point_before, dest='zh-CN').text
