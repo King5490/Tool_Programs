@@ -73,11 +73,11 @@ figure(3),step(sys1);%闭环阶跃相应
 % [num,den]=zp2tf(z,p,k)%零极点增益模型转换为多项式传递函数模型
 % [p,z] = pzmap(sys)%零极点(图)
 %  
-%  rlocus(sys)%绘制根轨迹
+% rlocus(sys)%绘制根轨迹
  
 
 
-%symvar(Fx), 该函数返回的是符号函数中的自变量
-%f=matlabFunction(Fx), 转化后的函数就可以直接带入数值求解了
-%f(x,y,z), 求函数值
+% symvar(Fx), 该函数返回的是符号函数中的自变量
+% f=matlabFunction(Fx), 转化后的函数就可以直接带入数值求解了
+% f(x,y,z), 求函数值
  
