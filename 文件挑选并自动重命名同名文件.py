@@ -27,7 +27,7 @@ def files_filter():
             file_name = os.path.join(root, file)
 
             if not re.search('挑选结果', root):
-                if re.search('mp4', file) or re.search('mov', file) or re.search('mkv', file):
+                if re.search('mp4', file, re.I) or re.search('mov', file, re.I) or re.search('mkv', file, re.I):
                     if all_files.count(file) >= 2:
                         point_before = file[0:file.find('.')]
                         point_after = file[file.find('.'):len(file)]
