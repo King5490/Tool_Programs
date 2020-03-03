@@ -1,6 +1,7 @@
 clf
 clc
 clear
+format rat
 
 syms G s
 
@@ -57,8 +58,12 @@ figure(3),step(sys1);%闭环阶跃相应
 
 % 其他函数(注意:有些函数的入口参数注意不能是符号型的而返回的是符号型的)
 % sys=tf(num,den)%得到系统sys
+% printsys(num,den,'s')%输入分子分母打印出系统方程
 %
 % conv(num,numc)%只能计算两个多项式系数数组相乘
+%
+%[r,p,k]=residue(num,den)%部分因式展开,r为留数,p为极点(与r一一对应,若存在重根,则p中相同的数第1个为r1/(s+k)^1,第n个为rn/(s+k)^n),k为展开后剩余的多项式
+%[num,den]=residue(r,p,k)%上述逆运算
 %
 % [n,d]=numden(G)%提取系统方程的分子分母
 % coeffs(G,s,'All') %多项式展开返回系数一维符号型数组(可计算多参数多项式)
@@ -74,10 +79,12 @@ figure(3),step(sys1);%闭环阶跃相应
 % [p,z] = pzmap(sys)%零极点(图)
 %  
 % rlocus(sys)%绘制根轨迹
- 
 
 
-% symvar(Fx), 该函数返回的是符号函数中的自变量
-% f=matlabFunction(Fx), 转化后的函数就可以直接带入数值求解了
-% f(x,y,z), 求函数值
+%[A,B,C,D]=tf2ss(num,den)%由系统方程的分子分母求状态空间表达式的4个矩阵
+%[num,den]=ss2tf(a,b,c,d)%上述逆运算
+
+% symvar(Fx)%该函数返回的是符号函数中的自变量
+% f=matlabFunction(Fx)%转化后的函数就可以直接带入数值求解了
+% f(x,y,z)%求函数值
  
