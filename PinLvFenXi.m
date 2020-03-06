@@ -59,7 +59,7 @@ figure(3),step(sys1);%闭环阶跃相应
 % 其他函数(注意:有些函数的入口参数注意不能是符号型的而返回的是符号型的)
 % F=laplace(f,t,s)拉普拉斯变换,自变量由t->s
 % f=ilaplace(F,s,t)拉普拉斯逆变换,自变量由s->t
-% sys=tf(num,den)%得到系统sys
+% sys=tf(num,den)%得到系统sys(tf),sys.num{1};sys.den{1}各为系统的分子分母系数(同原num,den为展开式系数)
 % printsys(num,den,'s')%输入分子分母打印出系统方程
 %
 % conv(num,numc)%只能计算两个多项式系数数组相乘
@@ -74,12 +74,13 @@ figure(3),step(sys1);%闭环阶跃相应
 %
 % sys = parallel(sys1,sys2)%系统并联
 % sys = series(sys1,sys2)%系统串联
-%  
+% 
 % sys=zpk(z,p,k)%根据零极点建立系统函数(k为零极点增益)zpk([z1,z2],[p1,p2],k)
+% sys.z{1}=z,sys.p{1}=p,sys.k{1}=k
 % [z,p,k]=tf2zp(num,den)%多项式传递函数模型转换为零极点增益模型
 % [num,den]=zp2tf(z,p,k)%零极点增益模型转换为多项式传递函数模型
 % [p,z] = pzmap(sys)%零极点(图)
-%  
+% 
 % rlocus(sys)%绘制根轨迹
 
 

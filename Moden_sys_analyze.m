@@ -14,7 +14,8 @@ sys=tf(num,den);
 % sys=tf(num,den)%分子分母得sys(tf型)
 % sys=ss(A,B,C,D)%状态空间矩阵得sys(ss型)
 % sys=zpk(z,p,k)%零极点得sys(zpk型)(k为零极点增益)zpk([z1,z2],[p1,p2],k)
-% 
+% 各型系统有不同的参数,可能为元组如sys.num{1}=num(tf型),sys.z{1}=z(zpk型);sys.ts(非元组)等可单独设置
+%
 % [A,B,C,D]=tf2ss(num,den)%三种系统表达形式均可两两之间直接任意互换,随之 *2*
 % [num1,den1]=ss2tf(A,B,C,D)
 % [z,p,k] = ss2zp(A,B,C,D)
