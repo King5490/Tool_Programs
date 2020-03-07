@@ -64,7 +64,7 @@ figure(3),step(sys1);%闭环阶跃相应
 %
 % conv(num,numc)%只能计算两个多项式系数数组相乘
 %
-% [r,p,k]=residue(num,den)%部分因式展开,r为留数,p为极点(与r一一对应,若存在重根,则p中相同的数第1个为r1/(s+k)^1,第n个为rn/(s+k)^n),k为展开后剩余的多项式
+% [r,p,k]=residue(num,den)%部分因式展开,r为留数,p为极点(与r一一对应,若存在重根,则p中相同的数第1个为r1/(s+p),第n个为rn/(s+p)^n),k为展开后剩余的多项式
 % [num,den]=residue(r,p,k)%上述逆运算
 %
 % [n,d]=numden(G)%提取系统方程的分子分母
