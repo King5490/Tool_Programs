@@ -27,6 +27,8 @@ sys=tf(num,den);
 % [P,J]=jordan(A)单独求矩阵约旦型函数,J为所求约旦型,P为变换矩阵(inv(P)为惯用人为计算得到的形式)
 % [A1,B1,C1,D1]=ss2ss(A,B,C,D,inv(P))%求系统的约旦型
 
+% eAt=ilaplace(inv(s*eye(size(A))-A),s,t)%拉普拉斯逆变换求状态转移矩阵
+
 
 % [Gc,T]=canon(sys,'type')% 其中sys为原系统模型(tf型)，而返回的As,Bs,Cs,Ds位指定的标准型的状态方程模型，
 % T为变换矩阵(注意变换方程为：Xs=TX),这里的type为变换类型，有两个选项：
