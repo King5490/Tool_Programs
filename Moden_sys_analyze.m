@@ -36,5 +36,5 @@ sys=tf(num,den);
 % [V,D]=eig(A)求矩阵的特征矩阵及特征值,对角矩阵D和矩阵V,其列是对应的右特征向量,使得 A*V = V*D。
 % T=balance(sys.A)%改善A矩阵的条件(没啥用)
 
-% printsys(num1,den1,'s')%打印tf型系统方程
+% printsys(num,den,'s')%打印tf型系统方程
 
