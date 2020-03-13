@@ -1,5 +1,5 @@
-clc
 clear
+close
 format rat
 
 syms G s
@@ -15,6 +15,10 @@ sys=tf(num,den);
 % sys=ss(A,B,C,D)%状态空间矩阵得sys(ss型)
 % sys=zpk(z,p,k)%零极点得sys(zpk型)(k为零极点增益)zpk([z1,z2],[p1,p2],k)
 % 各型系统有不同的参数,可能为元组如sys.num{1}=num(tf型),sys.z{1}=z(zpk型);sys.ts(非元组)等可单独设置
+%
+% [num,den]=tfdata(sys)%提取出tf型系统的相关参数
+% [A,B,C,D,Ts]=ssdata(sys)%提取出ss型系统的相关参数,Ts若不存在,则为0,可不写
+% [z,p,k,Ts]=zpkdata(sys,'v')%参数'v'为强制提取(以上提取的参数均可用sys.*单独代替)
 %
 % [A,B,C,D]=tf2ss(num,den)%三种系统表达形式均可两两之间直接任意互换,函数随之变为 *2*
 % [num,den]=ss2tf(A,B,C,D)
@@ -39,4 +43,4 @@ sys=tf(num,den);
 % T=balance(sys.A)%改善A矩阵的条件(没啥用)
 
 % printsys(num,den,'s')%打印tf型系统方程
-
+% step(sys)闭环单位阶跃相应;impulse(sys)单位冲击响应
