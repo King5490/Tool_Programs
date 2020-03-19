@@ -11,6 +11,19 @@ num=double(coeffs(num_s,s,'all'));%系统开环函数分子(数据转换后)
 den=double(coeffs(den_s,s,'all'));%系统开环函数分母(数据转换后)
 sys=tf(num,den);
 
+[A,B,C,D]=tf2ss(num,den)
+ if rank(ctrb(A,B))==size(A)%能控性分析
+    Co='能控'
+ else
+     Co='不能控'
+ end
+
+  if rank(obsv(A,C))==size(A)%能观性分析
+    Ob='能观'
+ else
+     Ob='不能观'
+ end
+
 % sys=tf(num,den)%分子分母得sys(tf型)
 % sys=ss(A,B,C,D)%状态空间矩阵得sys(ss型)
 % sys=zpk(z,p,k)%零极点得sys(zpk型)(k为零极点增益)zpk([z1,z2],[p1,p2],k)
@@ -28,7 +41,7 @@ sys=tf(num,den);
 % [A1,B1,C1,D1]=ss2ss(A,B,C,D,inv(T))%状态空间表达式之间的互换,其中T为变换矩阵,,T为单位矩阵,则不变,
 % 注意变换方程为:X1=TX,而不是常见的X=TX1,所以要与用户习惯的变换方程一致,必须用T的逆代入上式
 %
-% [P,J]=jordan(A)单独求矩阵约旦型函数,J为所求约旦型,P为变换矩阵(inv(P)为惯用人为计算得到的形式)
+% [P,J]=jordan(A)%单独求矩阵约旦型函数,J为所求约旦型,P为变换矩阵(inv(P)为惯用人为计算得到的形式)
 % [A1,B1,C1,D1]=ss2ss(A,B,C,D,inv(P))%求系统的约旦型
 
 % eAt=ilaplace(inv(s*eye(size(A))-A),s,t)%拉普拉斯逆变换求状态转移矩阵
@@ -36,7 +49,7 @@ sys=tf(num,den);
 
 % [Gc,T]=canon(sys,'type')% 其中sys为原系统模型(tf型)，而返回的As,Bs,Cs,Ds位指定的标准型的状态方程模型，
 % T为变换矩阵(注意变换方程为：Xs=TX),这里的type为变换类型，有两个选项：
-% 'modal':模型标准型为对角标准型(非约旦型); 'companion':模型标准型为伴随标准型(由系统方程套用公式的来的那种).
+% 'modal':模型标准型为对角标准型(非约旦型); 'companion':模型标准型为伴随标准型(由系统方程套用公式的来的友矩阵).
 
 
 % [V,D]=eig(A)求矩阵的特征矩阵及特征值,对角矩阵D和矩阵V,其列是对应的右特征向量,使得 A*V = V*D。
