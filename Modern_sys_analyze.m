@@ -12,13 +12,16 @@ den=double(coeffs(den_s,s,'all'));%系统开环函数分母(数据转换后)
 sys=tf(num,den);
 
 [A,B,C,D]=tf2ss(num,den)
- if rank(ctrb(A,B))==size(A)%能控性分析
+M=ctrb(A,B)%能控性分析
+M1=rref(M)%化简矩阵为阶梯最简型
+ if rank(M)==size(A)%求秩后比较
     Co='能控'
  else
      Co='不能控'
  end
-
-  if rank(obsv(A,C))==size(A)%能观性分析
+N=obsv(A,C)%能观性分析
+N1=rref(N)%化简矩阵为阶梯最简型
+  if rank(N)==size(A)%求秩后比较
     Ob='能观'
  else
      Ob='不能观'
@@ -54,6 +57,7 @@ sys=tf(num,den);
 
 % [V,D]=eig(A)求矩阵的特征矩阵及特征值,对角矩阵D和矩阵V,其列是对应的右特征向量,使得 A*V = V*D。
 % T=balance(sys.A)%改善A矩阵的条件(没啥用)
+
 
 % printsys(num,den,'s')%打印tf型系统方程
 % step(sys)闭环单位阶跃相应;impulse(sys)单位冲击响应
