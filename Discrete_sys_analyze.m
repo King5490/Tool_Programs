@@ -22,7 +22,7 @@ pretty(Gz)%将所得系统方程化为书面形式打印出来
 % sys=d2c(sysd,'method')%离散化方程连续化
 % [num,den]=tfdata(sys)%提取出tf型系统的相关参数上述两变换结果均为tf型系统
 
-% step(sys)闭环单位阶跃相应;impulse(sys)单位冲击响应
+% step(sys)%闭环单位阶跃相应;impulse(sys)%单位冲击响应
 
 % symvar(Fx)%该函数返回的是符号函数中的自变量
 % f=matlabFunction(Fx)%转化后的函数就可以直接带入数值求解了

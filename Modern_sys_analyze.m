@@ -27,6 +27,12 @@ N1=rref(N)%化简矩阵为阶梯最简型
      Ob='不能观'
  end
 
+[Abar,Bbar,Cbar,T,K]=ctrbf(A,B,C,D)%能控性分解,Abar,Bbar,Cbar为变换后的矩阵,T为转换时的相似变换阵
+[abar,bbar,cbar,t,k]=obsvf(A,B,C,D)%能控性分解,abar,bbar,cbar为变换后的矩阵,T为转换时的相似变换阵
+% K(k)是一个行向量,是系统能控(观)矩阵各个块的秩,sum(K)为系统的可控(观)状态的数量
+
+
+
 % sys=tf(num,den)%分子分母得sys(tf型)
 % sys=ss(A,B,C,D)%状态空间矩阵得sys(ss型)
 % sys=zpk(z,p,k)%零极点得sys(zpk型)(k为零极点增益)zpk([z1,z2],[p1,p2],k)
@@ -50,14 +56,15 @@ N1=rref(N)%化简矩阵为阶梯最简型
 % eAt=ilaplace(inv(s*eye(size(A))-A),s,t)%拉普拉斯逆变换求状态转移矩阵
 
 
-% [Gc,T]=canon(sys,'type')% 其中sys为原系统模型(tf型)，而返回的As,Bs,Cs,Ds位指定的标准型的状态方程模型，
-% T为变换矩阵(注意变换方程为：Xs=TX),这里的type为变换类型，有两个选项：
-% 'modal':模型标准型为对角标准型(非约旦型); 'companion':模型标准型为伴随标准型(能控I型或者能控II型).
+% [Gc,T]=canon(sys,'type')% 其中sys为原系统模型(tf型),而返回的As,Bs,Cs,Ds位指定的标准型的状态方程模型
+% T为变换矩阵(注意变换方程为：Xs=TX),这里的type为变换类型,有两个选项：
+% 'modal':模型标准型为对角标准型(非约旦型); 'companion':模型标准型为伴随标准型(能控I型或者能控II型,不能控报错).
 
 
-% [V,D]=eig(A)求矩阵的特征矩阵及特征值,对角矩阵D和矩阵V,其列是对应的右特征向量,使得 A*V = V*D。
+% [V,D]=eig(A)%求矩阵的特征矩阵及特征值,对角矩阵D和矩阵V,其列是对应的右特征向量,使得 A*V = V*D。
+% Adet=det(A)%求方阵的行列式值
 % T=balance(sys.A)%改善A矩阵的条件(没啥用)
 
 
 % printsys(num,den,'s')%打印tf型系统方程
-% step(sys)闭环单位阶跃相应;impulse(sys)单位冲击响应
+% step(sys)%闭环单位阶跃相应;impulse(sys)%单位冲击响应
