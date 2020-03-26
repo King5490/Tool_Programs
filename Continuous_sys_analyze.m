@@ -37,16 +37,16 @@ figure(3),step(sys1);%闭环单位阶跃相应;impulse(sys)单位冲击响应
 % 校正环节(或者额外增加的环节)
 % numc=[1]
 % denc=[1]
-% 
+%
 % numaf=conv(num,numc)%只能计算两个
 % denaf=conv(den,denc)
-% 
+%
 % [magaf,phaseaf,waf]=bode(numaf,denaf,w)
 % [Gmaf,Pmaf,Wcgaf,Wcpaf]=margin(magaf,phaseaf,w)
-% 
+%
 % sysaf=tf(numaf,denaf);%校正后系统开环方程
 % sysc=feedback(sysaf,1);%系统单位负反馈
-% 
+%
 % figure(4)
 % hold on
 % subplot(2,2,1),nyquist(numaf,denaf);
@@ -73,13 +73,13 @@ figure(3),step(sys1);%闭环单位阶跃相应;impulse(sys)单位冲击响应
 %
 % sys = parallel(sys1,sys2)%系统并联
 % sys = series(sys1,sys2)%系统串联
-% 
+%
 % sys=zpk(z,p,k)%根据零极点建立系统函数(k为零极点增益)zpk([z1,z2],[p1,p2],k)
 % sys.z{1}=z,sys.p{1}=p,sys.k{1}=k
 % [z,p,k]=tf2zp(num,den)%多项式传递函数模型转换为零极点增益模型
 % [num,den]=zp2tf(z,p,k)%零极点增益模型转换为多项式传递函数模型
-% [p,z] = pzmap(sys)%零极点(图)
-% 
+% [p,z]=pzmap(sys)%零极点(图)
+%
 % rlocus(sys)%绘制根轨迹
 
 
@@ -89,4 +89,3 @@ figure(3),step(sys1);%闭环单位阶跃相应;impulse(sys)单位冲击响应
 % symvar(Fx)%该函数返回的是符号函数中的自变量
 % f=matlabFunction(Fx)%转化后的函数就可以直接带入数值求解了
 % f(x,y,z)%求函数值
- 

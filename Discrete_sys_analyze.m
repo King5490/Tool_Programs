@@ -14,7 +14,7 @@ g=ilaplace(G,s,t);%拉普拉斯逆变换
 gd=compose(g,k*Ts);%创造嵌套函数,此处用作变量替换
 % fd=subs(g,t,k*Ts);%变量替换
 Gz=ztrans(gd);%z变换
-pretty(Gz)%将所得系统方程化为书面形式打印出来
+pretty(Gz);%将所得系统方程化为书面形式打印出来
 
 % sysd=c2d(sys,Ts,'method')%s域系统方程离散化,所得方程为多项式形式
 % 若根据s函数直接求z变换,用c2d(k,Ts,'imp'),'imp'称为"脉冲响应不变法"实为直接求Z变换

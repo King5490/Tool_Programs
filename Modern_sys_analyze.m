@@ -11,25 +11,27 @@ num=double(coeffs(num_s,s,'all'));%系统开环函数分子(数据转换后)
 den=double(coeffs(den_s,s,'all'));%系统开环函数分母(数据转换后)
 sys=tf(num,den);
 
-[A,B,C,D]=tf2ss(num,den)
-M=ctrb(A,B)%能控性分析
-M1=rref(M)%化简矩阵为阶梯最简型
+[A,B,C,D]=tf2ss(num,den);
+M=ctrb(A,B);%能控性分析%也可用Wc=gram(sys,'c')
+M1=rref(M);%化简矩阵为阶梯最简型
  if rank(M)==size(A)%求秩后比较
     Co='能控'
  else
      Co='不能控'
  end
-N=obsv(A,C)%能观性分析
-N1=rref(N)%化简矩阵为阶梯最简型
+N=obsv(A,C);%能观性分析%也可用Wo=gram(sys,'o')
+N1=rref(N);%化简矩阵为阶梯最简型
   if rank(N)==size(A)%求秩后比较
     Ob='能观'
  else
      Ob='不能观'
  end
 
-[Abar,Bbar,Cbar,T,K]=ctrbf(A,B,C,D)%能控性分解,Abar,Bbar,Cbar为变换后的矩阵,T为转换时的相似变换阵
-[abar,bbar,cbar,t,k]=obsvf(A,B,C,D)%能控性分解,abar,bbar,cbar为变换后的矩阵,T为转换时的相似变换阵
+[Abar,Bbar,Cbar,T,K]=ctrbf(A,B,C,D);%能控性分解,Abar,Bbar,Cbar为变换后的矩阵,T为转换时的相似变换阵
+[abar,bbar,cbar,t,k]=obsvf(A,B,C,D);%能控性分解,abar,bbar,cbar为变换后的矩阵,T为转换时的相似变换阵
 % K(k)是一个行向量,是系统能控(观)矩阵各个块的秩,sum(K)为系统的可控(观)状态的数量
+
+sysr=minreal(sys);%最小实现的求取(sys可为任意系统型);sminreal(sys)会保留原ss系统阶数进行最小实现 
 
 
 
