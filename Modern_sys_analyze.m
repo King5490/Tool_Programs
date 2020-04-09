@@ -60,13 +60,21 @@ sysr = minreal(sys);%最小实现的求取(sys可为任意系统型);sminreal(sy
 
 % [Gc,T] = canon(sys,'type');%其中sys为原系统模型(tf型),而返回的As,Bs,Cs,Ds位指定的标准型的状态方程模型
 % T为变换矩阵(注意变换方程为：Xs=TX),这里的type为变换类型,有两个选项：
-% 'modal':模型标准型为对角标准型(非约旦型); 'companion':模型标准型为伴随标准型(能控I型或者能控II型,不能控报错).
+% 'modal':模型标准型为对角标准型(非约旦型); 'companion':模型标准型为友矩阵型(默认能控II型,不能控报错).
 
+% P=lyap(A,Q)%求解李雅普诺夫方程,Q通常选为单位阵
 
 % [V,D] = eig(A);%求矩阵的特征矩阵及特征值,对角矩阵D和矩阵V,其列是对应的右特征向量,使得 A*V = V*D。
 % Adet = det(A);%求方阵的行列式值
 % T = balance(sys.A);%改善A矩阵的条件(没啥用)
 
+% u = [1,a2,a1,a0];%三阶友矩阵的原型,第一个元素必须是1
+% A = compan(u);%创建友矩阵
+% A = fliplr(flipud(A));调整为常见型,最后一行为[-a0 -a1 -a2]
+
+% A = flipud(A);%将数组从上向下翻转
+% A = fliplr(A);%围绕垂直中轴按左右方向翻转其各列,可用作反序处理
+% A = rot90(A,k);%将数组A按逆时针方向旋转k*90度,其中 k 是一个整数
 
 % printsys(num,den,'s')%打印tf型系统方程
 % step(sys)%闭环单位阶跃相应;impulse(sys)%单位冲击响应
