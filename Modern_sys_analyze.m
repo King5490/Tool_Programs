@@ -9,7 +9,10 @@ G = 6*(s+1)/(s*(s+2)*(s+3));
 [num_s,den_s] = numden(G);%提取系统方程的分子分母(输出的数组是符号型的需要数据转换)
 num = double(coeffs(num_s,s,'all'));%系统开环函数分子(数据转换后)
 den = double(coeffs(den_s,s,'all'));%系统开环函数分母(数据转换后)
+num = num./den(1);%分子标准化
+den = den./den(1);%分母标准化
 sys = tf(num,den);
+
 
 [A,B,C,D] = tf2ss(num,den);
 M = ctrb(A,B);%能控性分析%也可用Wc = gram(sys,'c');
