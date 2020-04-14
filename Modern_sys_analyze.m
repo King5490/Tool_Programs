@@ -63,7 +63,7 @@ sysr = minreal(sys);%最小实现的求取(sys可为任意系统型);sminreal(sy
 
 % [Gc,T] = canon(sys,'type');%其中sys为原系统模型(tf型),而返回的As,Bs,Cs,Ds位指定的标准型的状态方程模型
 % T为变换矩阵(注意变换方程为：Xs=TX),这里的type为变换类型,有两个选项：
-% 'modal':模型标准型为对角标准型(非约旦型); 'companion':模型标准型为友矩阵型(默认能控II型,不能控报错).
+% 'modal':模型标准型为对角标准型(并联实现); 'companion':模型标准型为友矩阵型(默认能控II型,不能控报错).
 
 % P=lyap(A,Q)%求解李雅普诺夫方程,Q通常选为单位阵
 
