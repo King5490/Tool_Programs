@@ -28,11 +28,12 @@ figure(2),bode(num,den);%伯德图
 
 sys = tf(num,den);%系统方程
 sys1 = feedback(sys,1);%系统单位负反馈
-figure(3),step(sys1);%闭环单位阶跃相应;impulse(sys)单位冲击响应
+figure(3),step(sys1);%闭环单位阶跃响应;impulse(sys)单位冲击响应
+
 
 % cloop()函数已弃用,建议用feedback()函数
 % [num1,den1] = cloop(num,den);%求闭环系统函数
-% figure(3);step(num1,den1);%闭环阶跃相应
+% figure(3);step(num1,den1);%闭环阶跃响应
 
 
 
@@ -83,8 +84,12 @@ figure(3),step(sys1);%闭环单位阶跃相应;impulse(sys)单位冲击响应
 % [num,den] = zp2tf(z,p,k);%零极点增益模型转换为多项式传递函数模型
 % [p,z] = pzmap(sys);%零极点(图)
 %
-% rlocus(sys) %绘制根轨迹
-
+% rlocus(sys);%绘制根轨迹
+% [K,POLES] = rlocfind(sys);%K为所选极点的开环增益
+% rltool(sys);%根轨迹设计器
+%
+% [u,t] = gensig(type,tau,Tf,Ts);%生成指定的信号%type信号类型;tau信号周期;Tf持续时间(三个参数时省略);Ts采样时间;
+% lsim(sys,u,t);%绘制系统指定信号输入的相应图形
 
 % [A,B,C,D] = tf2ss(num,den);%由系统方程的分子分母求状态空间表达式的4个矩阵
 % [num,den] = ss2tf(a,b,c,d);%上述逆运算

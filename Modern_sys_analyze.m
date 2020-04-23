@@ -99,6 +99,9 @@ end
 % K = place(A,B,P);%多变量系统极点配置,但不适用含有多重期望极点的问题;应注意 新的A矩阵 = A-B*K
 
 
+% initial(sys,x0);%绘制零输入相应曲线(sys为ss型系统),x0初始状态矩阵
+% [u,t] = gensig(type,tau,Tf,Ts);%生成指定的信号%type信号类型;tau信号周期;Tf持续时间(三个参数时省略);Ts采样时间;
+% lsim(sys,u,t);%绘制系统指定信号输入的相应图形
 
 % A = A'%矩阵转置
 % [V,D] = eig(A);%求矩阵的特征矩阵及特征值,对角矩阵D和矩阵V,其列是对应的右特征向量,使得 A*V = V*D。
@@ -114,6 +117,6 @@ end
 % A = rot90(A,k);%将数组A按逆时针方向旋转k*90度,其中 k 是一个整数
 
 % printsys(num,den,'s')%打印tf型系统方程
-% step(sys)%闭环单位阶跃相应;impulse(sys)%单位冲击响应
+% step(sys)%闭环单位阶跃响应;impulse(sys)%单位冲击响应
 
 

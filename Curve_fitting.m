@@ -3,7 +3,7 @@ y1=[-2.6 -2.53 -2.34 -2.16 -1.986 -1.813 -1.643 -1.464 -1.289 -1.107 -0.939 -0.7
 plot(x1,y1,'+')
 hold on
 k1=polyfit(x1,y1,1)
-x=linspace(8,12)
+x=linspace(min(x1),max(x1))
 y=k1(1)*x+k1(2)
 plot(x,y)
 

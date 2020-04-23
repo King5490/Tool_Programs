@@ -18,14 +18,29 @@ gd = compose(g,k*Ts);%创造嵌套函数,此处用作变量替换
 Gz = ztrans(gd);%z变换
 pretty(Gz);%将所得系统方程化为书面形式打印出来
 
+% Ts = 1;采样时间
 % sysd = c2d(sys,Ts,'method');%s域系统方程离散化,所得方程为多项式形式
 % 若根据s函数直接求z变换,用c2d(k,Ts,'imp'),'imp'称为"脉冲响应不变法"实为直接求Z变换
 % method:'zoh'零阶保持器法;'foh'一阶保持器法;'tustin'双线性变换法;'imp'脉冲响应不变法;默认的是'zoh'
 % sys = d2c(sysd,'method');%离散化方程连续化
-% [num,den] = tfdata(sys);%提取出tf型系统的相关参数上述两变换结果均为tf型系统
+% [num,den] = tfdata(sysd);%提取出tf型系统的相关参数上述两变换结果均为tf型系统
 
-% step(sys)%闭环单位阶跃相应;impulse(sys)%单位冲击响应
+figure(1),dnyquist(NUM,DEN,Ts);%绘制离散奈奎斯特图
+figure(2),[MAG,PHASE,W] = dbode(NUM,DEN,Ts);%绘制离散伯德图
+
+
+% *******其他常用函数*******(本文涉及大多数函数均可使用状态空间表达式)
+
+% [U,T] = gensig(type,tau,Tf,Ts);%生成指定的信号%type信号类型;tau信号周期;Tf持续时间(三个参数时省略);Ts采样时间;
+% dlsim(NUM,DEN,U);%绘制系统指定信号输入的相应图形
+% dinitial(sysd,x0);%绘制离散零输入相应曲线(sysd为ss型系统),x0初始状态矩阵
+
+% dstep(num,den)%离散闭环单位阶跃响应(状态空间表达式亦可)
+% dimpulse(num,den)%离散闭环单位脉冲响应(状态空间表达式亦可)
+% step(sys)%连续闭环单位阶跃响应;impulse(sys)%连续单位冲击响应
 
 % symvar(Fx)%该函数返回的是符号函数中的自变量
 % f = matlabFunction(Fx);%转化后的函数就可以直接带入数值求解了
 % f(x,y,z)%求函数值
+
+
