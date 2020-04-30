@@ -47,7 +47,7 @@ Pyy(i)=phase(Y(i)); %计算相位
 end
 stem(F(1:N/2),Pyy(1:N/2)); %显示相位图
 
-disp('查询点频率为:');%查询并显示特定点值
+disp('查询点频率对应相位为:');%查询并显示特定点值
 disp(Pyy(find(F== 2)));
 
 grid on

@@ -6,6 +6,9 @@ x1 = linspace(0,100,20);%如需外部导入数据见额外函数
 % x1 = 0:5:100
 y1 = [0 nan];%缺失值用nan代替
 
+% yc = y1(find(x1 == 20));%查询x1对应的y1
+% yp = spline(x1,y1,[2.333]);%线性预测x1对应的y1
+
 plot(x1,y1,'+');
 hold on;
 k1 = polyfit(x1,y1,1);
@@ -99,7 +102,7 @@ fxxwc = abs(maxy/max(y1)) %计算一维的非线性误差
 %
 % 三次样条插值
 % xq = [];%缺失的y1对应的x1
-% yq = spline(x,y,xq);
+% yq = spline(x1,y1,xq);
 %
 %
 % meshgrid格式的二维网格数据的插值
