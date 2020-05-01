@@ -35,7 +35,7 @@ fxxwc = abs(maxy/max(y1)) %计算一维的非线性误差
 
 
 
-% *******其他函数*******
+% *******其他函数*******(如需更多拟合功能,使用 Curve Fitting 工具箱)
 
 % [num,txt,raw] = xlsread('C:\Users\Desktop\fileName.xlsx');
 % num返回的是excel中的数据,txt输出的是文本内容,raw输出的是未处理数据
