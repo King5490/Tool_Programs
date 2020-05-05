@@ -13,6 +13,9 @@ plot(x1,y1,'+');
 hold on;
 k1 = polyfit(x1,y1,1);
 
+yx=poly2str(k1,'x');%输出多项式表达式到yx中
+ans1=sprintf('拟合曲线方程为: y=%s',yx);%打印出多项式表达式
+
 x = linspace(min(x1),max(x1));
 y = k1(1)*x+k1(2);
 plot(x,y);
@@ -25,7 +28,7 @@ ylabel('电压/(V)');%y轴变量名称
 xlim([8.00 12.00]);%作图x轴范围
 ylim([-4.00 4.00]);%作图y轴范围
 title('V-△X特性曲线');%图片名称
-gtext('拟合曲线方程为：y=1.8116*x-18.12');%自定义添加曲线名称
+gtext(ans1);%自定义添加曲线名称
 
 
 [maxy,num] = max(abs(k1(1)*x1+k1(2)-y1));
@@ -94,8 +97,8 @@ fxxwc = abs(maxy/max(y1)) %计算一维的非线性误差
 % ****插值补全数据****
 %
 % 分段线性插值(使用线性插值返回一维函数在特定查询点的插入值)
-% xq=[]缺失的y1对应的x1
-% yq=interp1(x1,y1,xq,'method')%默认method为 linear (spline线性度高)
+% xq=[];缺失的y1对应的x1
+% yq=interp1(x1,y1,xq,'method');%默认method为 linear (spline线性度高)
 % method: linear,nearest,next,previous,pchip,cubic,v5cubic,makima,spline
 % plot(xq,yq,'o');
 %
@@ -109,5 +112,5 @@ fxxwc = abs(maxy/max(y1)) %计算一维的非线性误差
 % [xq,yq] = meshgrid(0:1:10);%缺失的z1对应的x1,y1
 % zq = interp2(x1,y1,z1,xq,yq,'method');%默认方法为 linear
 % method: linear,nearest,cubic,makima,spline
-% surf(xq,yq,zq)
+% surf(xq,yq,zq);
 

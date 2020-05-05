@@ -62,10 +62,12 @@ figure(3),step(sys1);%闭环单位阶跃响应;impulse(sys)单位冲击响应
 % F = laplace(f,t,s);%拉普拉斯变换,自变量由t->s
 % f = ilaplace(F,s,t);%拉普拉斯逆变换,自变量由s->t
 % sys = tf(num,den);%得到系统sys(tf),sys.num{1};sys.den{1}各为系统的分子分母系数(同原num,den为展开式系数)
-% printsys(num,den,'s');%输入分子分母打印出系统方程
+% printsys(num,den,'s')%输入分子分母打印出系统方程(只能打印真分式,即因果系统)
+% yx=poly2str(coe,'x');%输出多项式表达式到yx中
+% sprintf('所求关系式为: y=%s',yx)%打印出多项式表达式
 %
-% conv(u,v) %只能计算两个多项式系数数组相乘(如果u和v是多项式系数的向量,则对它们进行去卷积相当于两个多项式相乘)
-% [q,r] = deconv(u,v);%使用长除法将向量v从向量u中解卷积,并返回商q和余数r,使得u=conv(v,q)+r
+% conv(u,v) %多项式乘法,只能计算两个多项式系数数组相乘(如果u和v是多项式系数的向量,则对它们进行去卷积相当于两个多项式相乘)
+% [q,r] = deconv(u,v);%多项式除法,使用长除法将向量v从向量u中解卷积,并返回商q和余数r,使得u=conv(v,q)+r
 %
 % [r,p,k] = residue(num,den);%部分因式展开,r为留数,p为极点(与r一一对应,若存在重根,则p中相同的数第1个为r1/(s+p),第n个为rn/(s+p)^n),k为展开后剩余的多项式
 % [num,den] = residue(r,p,k);%上述逆运算
