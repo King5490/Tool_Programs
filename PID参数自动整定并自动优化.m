@@ -12,10 +12,11 @@
 1.simulink搭建系统
 2.参数自整定法预整定参数
 3.matlab工作区设置要优化的PID的变量,并设置为预整定的值(为减小优化运算时间)
-4.添加Check Step Response Characteristics模块,并设置要求的性能指标
-5.模块最下面一行有 响应优化按钮
-6.Design Variables Set,设置要优化的参数,箭头导入参数
-7.Evaluate Requirements按钮
-8.Optimize按钮
-9.完成的参数优化在matlab工作区中查看
+4.将变量填入对应的simulink模块中
+5.添加Check Step Response Characteristics模块,并设置要求的性能指标
+6.模块最下面一行有 响应优化按钮
+7.Design Variables Set,设置要优化的参数,箭头导入参数
+8.Evaluate Requirements按钮
+9.Optimize按钮
+10.完成的参数优化在matlab工作区中查看
 
