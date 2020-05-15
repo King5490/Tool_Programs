@@ -71,7 +71,8 @@ end
 % sys = zpk(z,p,k);%零极点得sys(zpk型)(k为零极点增益)zpk([z1,z2],[p1,p2],k)
 % 各型系统有不同的参数,可能为元组如sys.num{1}=num(tf型),sys.z{1}=z(zpk型);sys.ts(非元组)等可单独设置
 %
-% [num,den] = tfdata(sys);%提取出tf型系统的相关参数
+% [num,den] = tfdata(sys);%提取出tf型系统的相关参数;sys.num sys.den;返回的是Cell型数据需要转换
+% num = cell2mat(num); den = cell2mat(den);Cell型数据转换为char,下同
 % [A,B,C,D,Ts] = ssdata(sys);%提取出ss型系统的相关参数,Ts若不存在,则为0,可不写
 % [z,p,k,Ts] = zpkdata(sys,'v');%参数'v'为强制提取(以上提取的参数均可用sys.*单独代替)
 %
@@ -93,7 +94,7 @@ end
 % T为变换矩阵(注意变换方程为：Xs=TX),这里的type为变换类型,有两个选项：
 % 'modal':模型标准型为对角标准型(对角线型); 'companion':模型标准型为友矩阵型(默认能控II型,不能控报错).
 
-% P=lyap(A,Q)%求解李雅普诺夫方程,Q通常选为单位阵
+% P = lyap(A,Q)%求解李雅普诺夫方程,Q通常选为单位阵
 
 % K = acker(A,B,P);%极点配置函数,向量P中是期望的闭环极点,不适用于多变量系统极点配置,适用于多重期望极点
 % K = place(A,B,P);%多变量系统极点配置,但不适用含有多重期望极点的问题;应注意 新的A矩阵 = A-B*K
