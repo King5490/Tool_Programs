@@ -20,15 +20,18 @@ x = linspace(min(x1),max(x1));
 y = k1(1)*x+k1(2);
 plot(x,y);
 
-grid on；
+grid on;
+box on;
 legend('实验数据','拟合数据');%曲线名称标注
 xlabel('位移/(mm)');%x轴变量名称
 ylabel('电压/(V)');%y轴变量名称
 
 xlim([8.00 12.00]);%作图x轴范围
 ylim([-4.00 4.00]);%作图y轴范围
+% rectangle();%框选部分特定区域
 title('V-△X特性曲线');%图片名称
 gtext(ans1);%自定义添加曲线名称
+% annotation();%可添加更复杂注释
 
 
 [maxy,num] = max(abs(k1(1)*x1+k1(2)-y1));
@@ -71,6 +74,7 @@ fxxwc = abs(maxy/max(y1)) %计算一维的非线性误差
 
 % stem(x,y);%绘制离散序列数据(针状图)
 % scatter(x,y);%散点图scatter3(x,y,z)三维散点图
+% line(x,y);%画线指令,不会覆盖之前的图像
 % polar(theta,rho);%极坐标绘制
 % plot3();%绘制三维曲线(输入点集)
 % ezplot();%符号函数图像的绘制,ezplot3()
@@ -80,7 +84,6 @@ fxxwc = abs(maxy/max(y1)) %计算一维的非线性误差
 % f=@(x,y,z) x.^2+y.^2-1;
 % fimplicit3(f);%三维隐函数的绘制
 % fplot3()
-
 
 % [x,y] = meshgrid(0:1:10,0:1:10);%点阵的生成
 % z = 12-x.^3-y.^3;
@@ -93,6 +96,19 @@ fxxwc = abs(maxy/max(y1)) %计算一维的非线性误差
 % f1 = figure(1);%返回图窗属性并创建图窗,关闭图窗后f1属性移除
 % figure(Name,Value);%自定义图窗属性,例如figure('name','图窗名字');
 % subplot(m,n,p)%将当前图窗划分为m×n网格,并在p子图窗后接绘图,后接等指令等,会覆盖当前前的图窗的之前内容
+
+% 保存图窗内容函数
+% print(句柄,存储格式,文件名);%句柄:“Figure 3”,句柄是3
+% gcf获取当前窗口句柄,故print多图时需要紧跟plot等画图指令
+% 存储格式:-dpng;-djpe;-dbitmap
+%
+% saveas(句柄,['储存目录目录\文件名','储存格式']);%保存默认格式的图窗,即所见不一定为所得
+% saveas(get_param('simulink_name','Handle'),'result.bmp');%保存simulink模块图
+% saveas 如果只有一幅图,句柄设为gcf,如果有多副,句柄需单独设置
+% 
+% frame=getframe(gcf);%获取坐标系中的图像文件数据
+% imwrite(frame.cdata,['储存目录目录','result.jpg','.jpg']);%可用于制作gif动图,保存结果所见即所得
+
 
 % ****插值补全数据****
 %
