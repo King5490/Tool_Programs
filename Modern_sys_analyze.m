@@ -64,6 +64,24 @@ else
 end
 
 
+% 判断系统是否渐进稳定
+% P = lyap(A',eye(size(A)));n1=0;
+% for n = 1:size(A)
+%     Pn=P(1:n,1:n);
+%     if det(Pn)>0
+%         n1=n1+1;
+%     end
+% end
+% if n1==size(A)
+%    disp('系统渐进稳定')
+%	 pause
+% else
+%    disp('系统不渐进稳定')
+%	 pause
+% end
+
+
+
 % *******其他常用函数*******
 
 % sys = tf(num,den);%分子分母得sys(tf型)
@@ -89,12 +107,22 @@ end
 
 % eAt = ilaplace(inv(s*eye(size(A))-A),s,t);%拉普拉斯逆变换求状态转移矩阵
 
+% 系统非齐次方程特定输入的解
+% K = 1;%输入倍数
+% x0=[x10;x20];%系统初始状态,可代数,也可用符号变量,行数等于系统状态变量数
+% K倍的单位脉冲响应
+% xt = eAt*x0 + eAt*B*K
+% K倍的单位阶跃输入响应
+% xt = eAt*x0 + A^(-1)*(eAt-eye(size(A)))*B*K
+% K倍的单位斜坡输入响应
+% xt = eAt*x0 + (A^(-2)*(eAt-eye(size(A)))-A^(-t))*B*K
+
 
 % [Gc,T] = canon(sys,'type');%其中sys为原系统模型(tf型),而返回的As,Bs,Cs,Ds位指定的标准型的状态方程模型
 % T为变换矩阵(注意变换方程为：Xs=TX),这里的type为变换类型,有两个选项：
 % 'modal':模型标准型为对角标准型(对角线型); 'companion':模型标准型为友矩阵型(默认能控II型,不能控报错).
 
-% P = lyap(A,Q)%求解李雅普诺夫方程,Q通常选为单位阵
+% P = lyap(A',Q)%求解李雅普诺夫方程,Q通常选为单位阵,因为matlab内部算法,A需要加转置
 
 % K = acker(A,B,P);%极点配置函数,向量P中是期望的闭环极点,不适用于多变量系统极点配置,适用于多重期望极点
 % K = place(A,B,P);%多变量系统极点配置,但不适用含有多重期望极点的问题;应注意 新的A矩阵 = A-B*K
