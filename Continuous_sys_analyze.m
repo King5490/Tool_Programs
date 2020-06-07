@@ -62,6 +62,7 @@ figure(3),step(sys1);%闭环单位阶跃响应;impulse(sys)单位冲击响应
 % F = laplace(f,t,s);%拉普拉斯变换,自变量由t->s
 % f = ilaplace(F,s,t);%拉普拉斯逆变换,自变量由s->t
 % sys = tf(num,den);%得到系统sys(tf),sys.num{1};sys.den{1}各为系统的分子分母系数(同原num,den为展开式系数)
+% [num,den]=tfdata(sys,'v');%提取系统方程的分子分母系数,不需要数据转化
 % printsys(num,den,'s')%输入分子分母打印出系统方程(只能打印真分式,即因果系统)
 % yx=poly2str(coe,'x');%输出多项式表达式到yx中
 % sprintf('所求关系式为: y=%s',yx)%打印出多项式表达式

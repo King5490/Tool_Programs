@@ -31,7 +31,7 @@ N1 = rref(N);%化简矩阵为阶梯最简型
  end
 
 [Abar,Bbar,Cbar,T,K] = ctrbf(A,B,C,D);%能控性分解,Abar,Bbar,Cbar为变换后的矩阵,T为转换时的相似变换阵
-[abar,bbar,cbar,t,k] = obsvf(A,B,C,D);%能控性分解,abar,bbar,cbar为变换后的矩阵,T为转换时的相似变换阵
+[abar,bbar,cbar,t,k] = obsvf(A,B,C,D);%能观性分解,abar,bbar,cbar为变换后的矩阵,T为转换时的相似变换阵
 % K(k)是一个行向量,是系统能控(观)矩阵各个块的秩,sum(K)为系统的可控(观)状态的数量
 
 sysr = minreal(sys);%最小实现的求取(sys可为任意系统型);sminreal(sys)会保留原ss系统阶数进行最小实现 
@@ -45,27 +45,27 @@ if  Ob == '能观'
 	
 	% *****以下为降维观测器的设计*****
 	
-	T=eye(size(A));%构造变换矩阵T,把原状态方程转化为C=[0,I]型
+	T = eye(size(A));%构造变换矩阵T,把原状态方程转化为C=[0,I]型
 	T(size(A,1),:) = C;
-	for n=1:size(A,1)-1
+	for n = 1:size(A,1)-1
 		L = logical(C);
-		L(n)=~L(n);
-		T(n,:)=L;
+		L(n) =~ L(n);
+		T(n,:) = L;
 	end
 	T = inv(T);
 
 	[A1,B1,C1,D1] = ss2ss(A,B,C,D,inv(T))%转化后A1=[A11 A12;A21 A22],C1=[0,I]
 
-	n=find(C1);%自动求A11,A21
-	n=n(1)-1;
-	A11=A1(1:n,1:n);
-	A21=A1(n+1:size(A1,2),1:n);
+	n = find(C1);%自动求A11,A21
+	n = n(1)-1;
+	A11 = A1(1:n,1:n);
+	A21 = A1(n+1:size(A1,2),1:n);
 
-	% A11=[0 0;1 0]%手动输入不能从输出y检测到的能观对
-	% A21=[1 1]%手动输入不能从输出y检测到的能观对
+	% A11 = [0 0;1 0]%手动输入不能从输出y检测到的能观对
+	% A21 = [1 1]%手动输入不能从输出y检测到的能观对
 	
-	% G=(acker(A11',A21',P))'%降维观测器方程中的变换矩阵G
-	% G=(place(A11',A21',P))'%降维观测器方程中的变换矩阵G,与上函数差异见下文极点配置
+	% G = (acker(A11',A21',P))'%降维观测器方程中的变换矩阵G
+	% G = (place(A11',A21',P))'%降维观测器方程中的变换矩阵G,与上函数差异见下文极点配置
 
 else
      disp('*****此状态方程不能观,无法求取状态观测器*****')
@@ -76,12 +76,12 @@ end
 % 判断系统是否渐进稳定
 % P = lyap(A',eye(size(A)));n1=0;
 % for n = 1:size(A)
-%     Pn=P(1:n,1:n);
-%     if det(Pn)>0
-%         n1=n1+1;
+%     Pn = P(1:n,1:n);
+%     if det(Pn) > 0
+%         n1 = n1+1;
 %     end
 % end
-% if n1==size(A)
+% if n1 == size(A)
 %    disp('系统渐进稳定')
 %	 pause
 % else
@@ -93,15 +93,19 @@ end
 
 % *******其他常用函数*******
 
+% G = C*inv(s*eye(size(A))-A)*B
+
 % sys = tf(num,den);%分子分母得sys(tf型)
 % sys = ss(A,B,C,D);%状态空间矩阵得sys(ss型)
 % sys = zpk(z,p,k);%零极点得sys(zpk型)(k为零极点增益)zpk([z1,z2],[p1,p2],k)
 % 各型系统有不同的参数,可能为元组如sys.num{1}=num(tf型),sys.z{1}=z(zpk型);sys.ts(非元组)等可单独设置
 %
 % [num,den] = tfdata(sys);%提取出tf型系统的相关参数;sys.num sys.den;返回的是Cell型数据需要转换
+% celldisp(dsys.den);打印出cell类型数据
 % num = cell2mat(num); den = cell2mat(den);Cell型数据转换为char,下同
-% [A,B,C,D,Ts] = ssdata(sys);%提取出ss型系统的相关参数,Ts若不存在,则为0,可不写
-% [z,p,k,Ts] = zpkdata(sys,'v');%参数'v'为强制提取(以上提取的参数均可用sys.*单独代替)
+% [num,den]=tfdata(sys,'v');%提取系统方程的分子分母系数,不需要数据转化,不带V参数将提取出cell型
+% [A,B,C,D,Ts] = ssdata(sys,'v');%提取出ss型系统的相关参数,Ts若不存在,则为0,可不写
+% [z,p,k,Ts] = zpkdata(sys,'v');%参数'v'为强制提取,可提取出char型数据(不带V参数可用sys.*单独代替)
 %
 % [A,B,C,D] = tf2ss(num,den);%三种系统表达形式均可两两之间直接任意互换,函数随之变为 *2*
 % [num,den] = ss2tf(A,B,C,D);
@@ -111,8 +115,8 @@ end
 % [A1,B1,C1,D1] = ss2ss(A,B,C,D,inv(T));%状态空间表达式之间的互换,其中T为变换矩阵,,T为单位矩阵,则不变,
 % 注意变换方程为:X1=TX,而不是常见的X=TX1,所以要与用户习惯的变换方程一致,必须用T的逆代入上式
 %
-% [P,J] = jordan(A);%单独求矩阵约旦型函数,J为所求约旦型,P为变换矩阵(inv(P)为惯用人为计算得到的形式)
-% [A1,B1,C1,D1] = ss2ss(A,B,C,D,inv(P));%求系统的约旦型
+% [P,J] = jordan(A);%单独求矩阵约旦型函数,J为所求约旦型,P为变换矩阵(T=P)
+% [A1,B1,C1,D1] = ss2ss(A,B,C,D,inv(P));%求系统的约旦型(inv(P)把人为计算型变为入口参数型)
 
 % eAt = ilaplace(inv(s*eye(size(A))-A),s,t);%拉普拉斯逆变换求状态转移矩阵
 
