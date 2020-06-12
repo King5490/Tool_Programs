@@ -100,6 +100,8 @@ end
 % sys = zpk(z,p,k);%零极点得sys(zpk型)(k为零极点增益)zpk([z1,z2],[p1,p2],k)
 % 各型系统有不同的参数,可能为元组如sys.num{1}=num(tf型),sys.z{1}=z(zpk型);sys.ts(非元组)等可单独设置
 %
+% sys = tf(num,den,'iodelay',0.12);%sys.iodelay=传输延时时间;inputdelay,outputdelay输入输出延时间(单位s)
+%
 % [num,den] = tfdata(sys);%提取出tf型系统的相关参数;sys.num sys.den;返回的是Cell型数据需要转换
 % celldisp(dsys.den);打印出cell类型数据
 % num = cell2mat(num); den = cell2mat(den);Cell型数据转换为char,下同

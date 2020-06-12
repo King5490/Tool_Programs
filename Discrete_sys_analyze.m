@@ -16,7 +16,8 @@ sys = tf(num,den);
 
 % num_d = [1 1];
 % den_d = [0.2 1];
-% sysd=tf(num_d,den_d,Ts);%直接创建离散系统
+% sysd=tf(num_d,den_d,Ts);%直接创建离散系统,系统变量为z
+% sysd=tf(num_d,den_d,Ts,'variable','z^-1');%系统变量为z^-1,各系数为z降阶排列时的系数
 
 g = ilaplace(G,s,t);%拉普拉斯逆变换
 gd = compose(g,k*Ts);%创造嵌套函数,此处用作变量替换
@@ -29,6 +30,7 @@ pretty(Gz);%将所得系统方程化为书面形式打印出来
 % method:'zoh'零阶保持器法;'tustin'双线性变换法;'foh'一阶保持器法;'imp'脉冲响应不变法;
 % 默认的是'zoh'(系统前串联上零阶保持器后直接z变换)
 % 后项差法分见下文程序
+% [F,G]=c2d(A,B,Ts);%连续状态空间方程离散化 A->F;B->G;C不变;D不变
 % sys = d2c(sysd,'method');%离散化方程连续化
 % [num,den] = tfdata(sysd);%提取出tf型系统的相关参数(需要转化数据类型)上述两变换结果均为tf型系统
 % num = cell2mat(num);分子数据类型转化
