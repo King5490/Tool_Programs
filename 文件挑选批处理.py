@@ -10,6 +10,7 @@ from googletrans import Translator
 # googletrans翻译模块是利用的Google翻译,需要网络支持,官方文档:
 # https://py-googletrans.readthedocs.io/en/latest/
 
+
 def audio_extractor(all_files, path):
     target_num = 0
     failed_num = 0
@@ -113,7 +114,7 @@ def all_files_extractor(all_files, path):
 
             if not re.search('挑选结果', root) and not re.search('所有文件', root):
                 if not re.search('txt', file, re.I) and not re.search('url', file, re.I) and not re.search('py', file,
-                                                                                                         re.I):
+                                                                                                           re.I):
 
                     if all_files.count(file) >= 2:
                         point_before = os.path.splitext(file)[0]
@@ -137,6 +138,25 @@ def all_files_extractor(all_files, path):
     files_filter(model=input("请输入文件筛选类型:"))
 
 
+def delete_all_empty_folder(path):
+    all_path = os.walk(path, topdown=False)
+    # Python中的os.walk提供了一种从内到外的遍历目录树的方法（设置topdown = False）
+    # 这样由内到外判断当前目录树下是否有文件和文件夹，如果都没有则意味着当前目录树为空文件夹，os.rmdir删除即可
+    for root, dirs, files in all_path:
+        # 先删除空白文件
+        for file in files:
+            file_name = os.path.join(root, file)
+            if os.path.isfile(file_name):  # 如果是文件
+                if os.path.getsize(file_name) == 0:  # 文件大小为0
+                    os.remove(file_name)  # 删除这个文件
+        # 删除空白文件夹
+        if not os.listdir(root):
+            os.rmdir(root)
+
+    print('空白文件夹和空白文件已全部删除！\n')
+    files_filter(model=input("请输入文件筛选类型:"))
+
+
 def files_filter(model):
     all_files = []
     path = os.getcwd()
@@ -152,9 +172,12 @@ def files_filter(model):
         video_extractor(all_files, path)
     elif model == '3':
         all_files_extractor(all_files, path)
+    elif model == '4':
+        delete_all_empty_folder(path)
     else:
         os.system("pause")
 
 
-print('输入类型: 1 为音频筛选; 2 为视频筛选; 3 为文件全提取(除之前的视频与音频外)\n输入其他为退出\n')
+print('输入: 1 为音频筛选;\n 2 为视频筛选;\n 3 为文件全提取(除之前的视频与音频外);\n 4 为删除全部空白文件夹及文件;\n')
+print('输入其他为退出\n')
 files_filter(model=input("请输入文件筛选类型:"))
