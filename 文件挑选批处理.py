@@ -178,6 +178,7 @@ def files_filter(model):
         os.system("pause")
 
 
-print('输入: 1 为音频筛选;\n 2 为视频筛选;\n 3 为文件全提取(除之前的视频与音频外);\n 4 为删除全部空白文件夹及文件;\n')
+print('输入: \n')
+print(' 1 为音频筛选;\n 2 为视频筛选;\n 3 为文件全提取(除之前的视频与音频外);\n 4 为删除全部空白文件夹及文件;\n')
 print('输入其他为退出\n')
 files_filter(model=input("请输入文件筛选类型:"))
