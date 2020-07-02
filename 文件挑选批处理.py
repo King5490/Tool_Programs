@@ -6,6 +6,7 @@ import re
 from googletrans import Translator
 
 # os.system()是直接操作的CMD(注意使用CMD语法)
+# shutil模块(高级文件操作模块)可替换一些CMD指令
 # subprocessd调用powershell脚本的方式可以使用shell(还不如直接shell脚本方便)
 # googletrans翻译模块是利用的Google翻译,需要网络支持,官方文档:
 # https://py-googletrans.readthedocs.io/en/latest/
@@ -147,7 +148,7 @@ def delete_all_empty_folder(path):
         for file in files:
             file_name = os.path.join(root, file)
             if os.path.isfile(file_name):  # 如果是文件
-                if os.path.getsize(file_name) == 0:  # 文件大小为0
+                if os.path.getsize(file_name) == 0 or re.search('url', file, re.I):  # 文件大小为0或者为网址链接
                     os.remove(file_name)  # 删除这个文件
         # 删除空白文件夹
         if not os.listdir(root):
@@ -179,6 +180,6 @@ def files_filter(model):
 
 
 print('输入: \n')
-print(' 1 为音频筛选;\n 2 为视频筛选;\n 3 为文件全提取(除之前的视频与音频外);\n 4 为删除全部空白文件夹及文件;\n')
+print(' 1 为音频筛选;\n 2 为视频筛选;\n 3 为文件全提取(除之前的视频与音频外);\n 4 为删除全部空白文件夹及空白文件;\n')
 print('输入其他为退出\n')
 files_filter(model=input("请输入文件筛选类型:"))
