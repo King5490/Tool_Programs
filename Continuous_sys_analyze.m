@@ -12,6 +12,13 @@ den = double(coeffs(den_s,s,'all'));%系统开环函数分母(数据转换后)
 num = num./den(1);%分子标准化
 den = den./den(1);%分母标准化
 
+% tf型转多项式
+% [num,den] = tfdata(sys);%提取tf型系统分子分母系数
+% num_sym = poly2sym(num,s);%把分子系数转换为多项式
+% den_sym = poly2sym(den,s);%把分母系数转换为多项式
+% sys_sym = num_sym/den_sym;%得到系统对应的多项式
+
+
 % num = [0 2];%系统开环函数分子(系统方程已分解,可以直接得到)
 % den = [1,3,2,0];%系统开环函数分母(系统方程已分解,可以直接得到)
 
@@ -35,6 +42,12 @@ figure(3),step(sys1);%闭环单位阶跃响应;impulse(sys)单位冲击响应
 % [num1,den1] = cloop(num,den);%求闭环系统函数
 % figure(3);step(num1,den1);%闭环阶跃响应
 
+%求取稳态误差
+rs = tf([1],[1 0]) %输入的拉氏变换
+sys_fz=(sys-1)*tf([1 0],[1])*rs;%输出减去输入乘s
+% Hs=tf([-1],[1]);%Hs为反馈回路传递函数,负反馈为-1,,正反馈为+1
+% sys_fz = (sys-1)*tf([1 0],[1])*rs*Hs;%调整为从输入定义的稳态误差
+ess = dcgain(sys_fz)%相当于终值定理,从输出定义的稳态误差求取
 
 
 % 校正环节(或者额外增加的环节)
@@ -95,7 +108,24 @@ figure(3),step(sys1);%闭环单位阶跃响应;impulse(sys)单位冲击响应
 % rltool(sys);%根轨迹设计器
 %
 % [u,t] = gensig(type,tau,Tf,Ts);%生成指定的信号%type信号类型;tau信号周期;Tf持续时间(三个参数时省略);Ts采样时间;
+% t = [0:0.01:100];%时间范围 u = ones(size(t));%位置输入(阶跃响应) u = t;%速度输入 u = 0.5.*t.^2;%加速度输入
 % lsim(sys,u,t);%绘制系统指定信号输入的相应图形
+
+% [y,t,x] = lsim(sys,u,t);%t y为系统特定输入下的输出序列
+% ess = y(find(t == max(t)))-u(find(t == max(t))) %给定时间内的伪稳态误差(从输出定义)
+
+% 拉氏变换法求稳态误差
+% sys1 = sys*rs-rs;%从输出定义的稳态误差的拉氏变换
+
+% Hs=tf([-1],[1]);%Hs为反馈回路传递函数,负反馈为-1,,正反馈为+1
+% sys1=(sys*rs-rs)*Hs;%为了从输入定义稳态误差的拉氏变换
+
+% [num,den] = tfdata(sys1);
+% num_sym = poly2sym(num,s);
+% den_sym = poly2sym(den,s);
+% sym_sys = num_sym/den_sym;
+% ess = limit(s*sym_sys,s,0) %终值定理求稳态误差(默认从输出定义)
+
 
 % [A,B,C,D] = tf2ss(num,den);%由系统方程的分子分母求状态空间表达式的4个矩阵
 % [num,den] = ss2tf(a,b,c,d);%上述逆运算
