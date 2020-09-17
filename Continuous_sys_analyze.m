@@ -27,8 +27,8 @@ w = logspace(-1,1,200);%10^-1到10^1之间对数规律取200个数
 figure(1),nyquist(num,den);%奈奎斯特
 
 [mag,phase,w] = bode(num,den,w);
-[Gm,Pm,Wcg,Wcp] = margin(mag,phase,w);
-% 增益或称幅值裕度（单位不是dB，想要dB为单位话用bode图）、相角裕度、相角交界频率wcg、截止频率wcp
+[Gm,Pm,Wx,Wc] = margin(mag,phase,w);
+% 增益或称幅值裕度（单位不是dB，想要dB为单位话用bode图）、相角裕度、相角交界频率（穿越频率）wx、截止（剪切）频率wc
 
 figure(2),bode(num,den);%伯德图
 
@@ -77,7 +77,7 @@ ess = dcgain(sys_fz)%相当于终值定理,从输出定义的稳态误差求取
 % sys = tf(num,den);%得到系统sys(tf),sys.num{1};sys.den{1}各为系统的分子分母系数(同原num,den为展开式系数)
 % [num,den]=tfdata(sys,'v');%提取系统方程的分子分母系数,不需要数据转化
 %
-% sys = tf(num,den,'iodelay',0.12);%sys.iodelay=传输延时时间;inputdelay,outputdelay输入输出延时间(单位s)
+% sys = tf(num,den,'iodelay',0.12);%sys.iodelay=传输延时时间;inputdelay,outputdelay输入输出滞后时间(单位s)
 %
 % printsys(num,den,'s')%输入分子分母打印出系统方程(只能打印真分式,即因果系统)
 % yx=poly2str(coe,'x');%输出多项式表达式到yx中
