@@ -50,6 +50,13 @@ fxxwc = abs(maxy/max(y1)) %计算一维的非线性误差
 
 % A = reshape(A1,[m,n]);%调整数据为 m*n 阶矩阵
 
+% M = mean(A,'all');%计算A的所有元素的均值
+% M = median(A,'all');%计算A的所有元素的中位数
+% S = std(A);%计算A每一列的标准差
+% V = var(A);%计算A的方差
+% C = cov(A);%计算A的协方差
+% R = corrcoef(A,B);%返回两个随机变量A和B之间的相关系数
+
 % A1 = [1 3 NaN 4 NaN NaN 5];
 % NUM = numel(A1)计算数据总个数
 % S = sum(isnan(A1));%计算缺失值数目
@@ -105,7 +112,7 @@ fxxwc = abs(maxy/max(y1)) %计算一维的非线性误差
 % saveas(句柄,['储存目录目录\文件名','储存格式']);%保存默认格式的图窗,即所见不一定为所得
 % saveas(get_param('simulink_name','Handle'),'result.bmp');%保存simulink模块图
 % saveas 如果只有一幅图,句柄设为gcf,如果有多副,句柄需单独设置
-% 
+%
 % frame=getframe(gcf);%获取坐标系中的图像文件数据
 % imwrite(frame.cdata,['储存目录目录','result.jpg','.jpg']);%可用于制作gif动图,保存结果所见即所得
 
