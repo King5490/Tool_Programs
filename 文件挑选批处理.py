@@ -3,6 +3,8 @@
 # author:King time:2020/2/11
 import os
 import re
+import win32con
+import win32api
 from googletrans import Translator
 
 # os.system()是直接操作的CMD(注意使用CMD语法)
@@ -40,11 +42,12 @@ def audio_extractor(all_files, path):
                         file_name = os.path.join(root, file_rename)
 
                     command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/挑选结果' + '"'
-                    try:
-                        os.system(command)
-                    except EnvironmentError:
-                        print('\n' + file_name + ' 此文件移动失败(可能为隐藏文件)')
-                        failed_num += 1
+                    if os.system(command):
+                        if win32api.GetFileAttributes(file_name.replace('\\', '/')) & 2:
+                            win32api.SetFileAttributes(file_name.replace('\\', '/'), win32con.FILE_ATTRIBUTE_ARCHIVE)
+                        if os.system(command):
+                            print('\n' + file_name + ' 此文件移动失败')
+                            failed_num += 1
                     target_num += 1
 
                 # 为了防止误操作,以下将语言检测设置为爪哇语
@@ -87,11 +90,12 @@ def video_extractor(all_files, path):
                         file_name = os.path.join(root, file_rename)
 
                     command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/挑选结果' + '"'
-                    try:
-                        os.system(command)
-                    except EnvironmentError:
-                        print('\n' + file_name + ' 此文件移动失败(可能为隐藏文件)')
-                        failed_num += 1
+                    if os.system(command):
+                        if win32api.GetFileAttributes(file_name.replace('\\', '/')) & 2:
+                            win32api.SetFileAttributes(file_name.replace('\\', '/'), win32con.FILE_ATTRIBUTE_ARCHIVE)
+                        if os.system(command):
+                            print('\n' + file_name + ' 此文件移动失败')
+                            failed_num += 1
                     target_num += 1
 
     print('从' + str(len(all_files)) + '个文件中挑选' + str(target_num) +
@@ -127,11 +131,12 @@ def all_files_extractor(all_files, path):
                         file_name = os.path.join(root, file_rename)
 
                     command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/所有文件' + '"'
-                    try:
-                        os.system(command)
-                    except EnvironmentError:
-                        print('\n' + file_name + ' 此文件移动失败(可能为隐藏文件)')
-                        failed_num += 1
+                    if os.system(command):
+                        if win32api.GetFileAttributes(file_name.replace('\\', '/')) & 2:
+                            win32api.SetFileAttributes(file_name.replace('\\', '/'), win32con.FILE_ATTRIBUTE_ARCHIVE)
+                        if os.system(command):
+                            print('\n' + file_name + ' 此文件移动失败')
+                            failed_num += 1
                     target_num += 1
 
     print('从' + str(len(all_files)) + '个文件中挑选' + str(target_num) +
@@ -172,11 +177,12 @@ def file_delete(all_files, path):
             if not re.search('挑选结果', root) and not re.search('所有文件', root):
                 if re.search(target_format, file, re.I):
                     command = 'del ' + '"' + file_name + '"'
-                    try:
-                        os.system(command)
-                    except EnvironmentError:
-                        print('\n' + file_name + ' 此文件删除失败(可能为隐藏文件)')
-                        failed_num += 1
+                    if os.system(command):
+                        if win32api.GetFileAttributes(file_name.replace('\\', '/')) & 2:
+                            win32api.SetFileAttributes(file_name.replace('\\', '/'), win32con.FILE_ATTRIBUTE_ARCHIVE)
+                        if os.system(command):
+                            print('\n' + file_name + ' 此文件删除失败')
+                            failed_num += 1
                     target_num += 1
 
     all_path = os.walk(path, topdown=False)
@@ -195,7 +201,7 @@ def file_extractor(all_files, path):
     failed_num = 0
     SameName_num = 0
 
-    target_format = input("请输入需要删除的文件格式:")
+    target_format = input("请输入需要挑选的文件格式:")
 
     folder = os.path.exists(path + '/挑选结果')
     if not folder:
@@ -219,11 +225,12 @@ def file_extractor(all_files, path):
                         file_name = os.path.join(root, file_rename)
 
                     command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/挑选结果' + '"'
-                    try:
-                        os.system(command)
-                    except EnvironmentError:
-                        print('\n' + file_name + ' 此文件移动失败(可能为隐藏文件)')
-                        failed_num += 1
+                    if os.system(command):
+                        if win32api.GetFileAttributes(file_name.replace('\\', '/')) & 2:
+                            win32api.SetFileAttributes(file_name.replace('\\', '/'), win32con.FILE_ATTRIBUTE_ARCHIVE)
+                        if os.system(command):
+                            print('\n' + file_name + ' 此文件移动失败')
+                            failed_num += 1
                     target_num += 1
 
     print('从' + str(len(all_files)) + '个文件中挑选' + str(target_num) +
