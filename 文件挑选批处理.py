@@ -158,6 +158,79 @@ def delete_all_empty_folder(path):
     files_filter(model=input("请输入文件筛选类型:"))
 
 
+def file_delete(all_files, path):
+    target_num = 0
+    failed_num = 0
+
+    target_format = input("请输入需要删除的文件格式:")
+
+    all_path = os.walk(path)
+    for root, dirs, files in all_path:
+        for file in files:
+            file_name = os.path.join(root, file)
+
+            if not re.search('挑选结果', root) and not re.search('所有文件', root):
+                if re.search(target_format, file, re.I):
+                    command = 'del ' + '"' + file_name + '"'
+                    try:
+                        os.system(command)
+                    except EnvironmentError:
+                        print('\n' + file_name + ' 此文件删除失败(可能为隐藏文件)')
+                        failed_num += 1
+                    target_num += 1
+
+    all_path = os.walk(path, topdown=False)
+    for root, dirs, files in all_path:
+        # 删除空白文件夹
+        if not os.listdir(root):
+            os.rmdir(root)
+
+    print('从' + str(len(all_files)) + '个文件中删除了' + str(target_num) +
+          '个特征文件,' + '其中失败了' + str(failed_num) + '文件.')
+    files_filter(model=input("请输入文件筛选类型:"))
+
+
+def file_extractor(all_files, path):
+    target_num = 0
+    failed_num = 0
+    SameName_num = 0
+
+    target_format = input("请输入需要删除的文件格式:")
+
+    folder = os.path.exists(path + '/挑选结果')
+    if not folder:
+        os.mkdir('挑选结果')
+
+    all_path = os.walk(path)
+    for root, dirs, files in all_path:
+        for file in files:
+            file_name = os.path.join(root, file)
+
+            if not re.search('挑选结果', root) and not re.search('所有文件', root):
+                if re.search(target_format, file, re.I):
+
+                    if all_files.count(file) >= 2:
+                        point_before = os.path.splitext(file)[0]
+                        point_after = os.path.splitext(file)[-1]
+                        file_rename = point_before + '_' + str(SameName_num) + point_after
+                        SameName_num += 1
+                        command_r = 'ren "' + file_name + '" "' + file_rename + '"'
+                        os.system(command_r)
+                        file_name = os.path.join(root, file_rename)
+
+                    command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/挑选结果' + '"'
+                    try:
+                        os.system(command)
+                    except EnvironmentError:
+                        print('\n' + file_name + ' 此文件移动失败(可能为隐藏文件)')
+                        failed_num += 1
+                    target_num += 1
+
+    print('从' + str(len(all_files)) + '个文件中挑选' + str(target_num) +
+          '个特征文件,' + '其中失败了' + str(failed_num) + '文件.')
+    files_filter(model=input("请输入文件筛选类型:"))
+
+
 def files_filter(model):
     all_files = []
     path = os.getcwd()
@@ -175,11 +248,21 @@ def files_filter(model):
         all_files_extractor(all_files, path)
     elif model == '4':
         delete_all_empty_folder(path)
+    elif model == '5':
+        file_delete(all_files, path)
+    elif model == '6':
+        file_extractor(all_files, path)
     else:
         os.system("pause")
 
 
-print('输入: \n')
-print(' 1 为音频筛选;\n 2 为视频筛选;\n 3 为文件全提取(除之前的视频与音频外);\n 4 为删除全部空白文件夹及空白文件;\n')
-print('输入其他为退出\n')
-files_filter(model=input("请输入文件筛选类型:"))
+if __name__=='__main__':
+    print('输入: \n')
+    print(' 1 为音频筛选;\n')
+    print(' 2 为视频筛选;\n')
+    print(' 3 为文件全提取(除之前的视频与音频外);\n')
+    print(' 4 为删除全部空白文件夹及文件;\n')
+    print(' 5 为删除指定格式的文件;\n')
+    print(' 6 为筛选指定格式的文件;\n')
+    print('输入其他为退出\n')
+    files_filter(model=input("请输入文件筛选类型:"))
