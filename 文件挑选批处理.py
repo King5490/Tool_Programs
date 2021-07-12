@@ -9,6 +9,8 @@ from googletrans import Translator
 
 # os.system()是直接操作的CMD(注意使用CMD语法)
 # shutil模块(高级文件操作模块)可替换一些CMD指令
+# pywin32中的函数可替换本文的cmd指令，但是会检验每一个文件是否隐藏
+# pathlib可用于替换本程序中的os.path指令
 # subprocessd调用powershell脚本的方式可以使用shell(还不如直接shell脚本方便)
 # googletrans翻译模块是利用的Google翻译,需要网络支持,官方文档:
 # https://py-googletrans.readthedocs.io/en/latest/
