@@ -62,7 +62,7 @@ def audio_extractor(all_files, path):
 
     print('从' + str(len(all_files)) + '个文件中挑选' + str(target_num) +
           '个特征文件,' + '其中失败了' + str(failed_num) + '文件.')
-    files_filter(model=input("请输入文件筛选类型:"))
+    files_filter(model=input("请输入文件批处理类型:"))
 
 
 def video_extractor(all_files, path):
@@ -102,7 +102,7 @@ def video_extractor(all_files, path):
 
     print('从' + str(len(all_files)) + '个文件中挑选' + str(target_num) +
           '个特征文件,' + '其中失败了' + str(failed_num) + '文件.')
-    files_filter(model=input("请输入文件筛选类型:"))
+    files_filter(model=input("请输入文件批处理类型:"))
 
 
 def all_files_extractor(all_files, path):
@@ -143,7 +143,7 @@ def all_files_extractor(all_files, path):
 
     print('从' + str(len(all_files)) + '个文件中挑选' + str(target_num) +
           '个特征文件,' + '其中失败了' + str(failed_num) + '文件.')
-    files_filter(model=input("请输入文件筛选类型:"))
+    files_filter(model=input("请输入文件批处理类型:"))
 
 
 def delete_all_empty_folder(path):
@@ -162,7 +162,7 @@ def delete_all_empty_folder(path):
             os.rmdir(root)
 
     print('空白文件夹和空白文件已全部删除！\n')
-    files_filter(model=input("请输入文件筛选类型:"))
+    files_filter(model=input("请输入文件批处理类型:"))
 
 
 def file_delete(all_files, path):
@@ -195,7 +195,7 @@ def file_delete(all_files, path):
 
     print('从' + str(len(all_files)) + '个文件中删除了' + str(target_num) +
           '个特征文件,' + '其中失败了' + str(failed_num) + '文件.')
-    files_filter(model=input("请输入文件筛选类型:"))
+    files_filter(model=input("请输入文件批处理类型:"))
 
 
 def file_extractor(all_files, path):
@@ -237,7 +237,49 @@ def file_extractor(all_files, path):
 
     print('从' + str(len(all_files)) + '个文件中挑选' + str(target_num) +
           '个特征文件,' + '其中失败了' + str(failed_num) + '文件.')
-    files_filter(model=input("请输入文件筛选类型:"))
+    files_filter(model=input("请输入文件批处理类型:"))
+
+
+def delete_selected_folder(path):
+    import ctypes, sys
+
+    if sys.version_info[0] == 3:
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
+    else:  # in python2.x
+        ctypes.windll.shell32.ShellExecuteW(None, u"runas", unicode(sys.executable), unicode(__file__), None, 1)
+
+    selected_folder=input('请输入当前目录下你想删除的文件夹名称（注意区分大小写）:')
+    command = 'rd /s/q "' + path +'/'+ selected_folder + '"'
+
+    if not os.system(command): #指令运行成功的话返回为0
+        print('\n' + selected_folder + ' 文件夹删除成功')
+    else:
+        print('\n' + selected_folder + ' 文件夹删除失败')
+        
+    files_filter(model=input("请输入文件批处理类型:"))
+
+
+def delete_all_folder(path):
+    confirm=input('你真的想删除当前目录下的所有文件夹吗？（请输入 Yes 进行确认）:')
+    if confirm == 'Yes':
+        import ctypes, sys
+
+        if sys.version_info[0] == 3:
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
+        else:  # in python2.x
+            ctypes.windll.shell32.ShellExecuteW(None, u"runas", unicode(sys.executable), unicode(__file__), None, 1)
+
+        things_in_folder = os.listdir(path)
+        for thing in things_in_folder:
+            if os.path.isdir(thing):
+                command = 'rd /s/q "' + path + '/' + thing + '"'
+                try:
+                    os.system(command)
+                except EnvironmentError:
+                    print('\n' + thing + ' 文件夹删除失败')
+
+        print('\n' + '当前目录下所有文件夹删除成功')
+    files_filter(model=input("请输入文件批处理类型:"))
 
 
 def files_filter(model):
@@ -261,6 +303,10 @@ def files_filter(model):
         file_delete(all_files, path)
     elif model == '6':
         file_extractor(all_files, path)
+    elif model == '7':
+        delete_selected_folder(path)
+    elif model == '8':
+        delete_all_folder(path)
     else:
         os.system("pause")
 
@@ -273,5 +319,8 @@ if __name__=='__main__':
     print(' 4 为删除全部空白文件夹及文件;\n')
     print(' 5 为删除指定格式的文件;\n')
     print(' 6 为筛选指定格式的文件;\n')
+    print(' 7 为删除当前目录的指定文件夹;\n')
+    print(' 8 为删除当前目录的所有文件夹;\n')
     print('输入其他为退出\n')
-    files_filter(model=input("请输入文件筛选类型:"))
+    files_filter(model=input("请输入文件批处理类型:"))
+    
