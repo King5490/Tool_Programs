@@ -22,9 +22,9 @@ def audio_extractor(all_files, path):
     SameName_num = 0
     translator = Translator()
 
-    folder = os.path.exists(path + '/挑选结果')
+    folder = os.path.exists(path + '/音频挑选结果')
     if not folder:
-        os.mkdir('挑选结果')
+        os.mkdir('音频挑选结果')
 
     all_path = os.walk(path)
     for root, dirs, files in all_path:
@@ -43,7 +43,7 @@ def audio_extractor(all_files, path):
                         os.system(command_r)
                         file_name = os.path.join(root, file_rename)
 
-                    command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/挑选结果' + '"'
+                    command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/音频挑选结果' + '"'
                     if os.system(command):
                         if win32api.GetFileAttributes(file_name.replace('\\', '/')) & 2:
                             win32api.SetFileAttributes(file_name.replace('\\', '/'), win32con.FILE_ATTRIBUTE_ARCHIVE)
@@ -70,9 +70,9 @@ def video_extractor(all_files, path):
     failed_num = 0
     SameName_num = 0
 
-    folder = os.path.exists(path + '/挑选结果')
+    folder = os.path.exists(path + '/视频挑选结果')
     if not folder:
-        os.mkdir('挑选结果')
+        os.mkdir('视频挑选结果')
 
     all_path = os.walk(path)
     for root, dirs, files in all_path:
@@ -91,7 +91,7 @@ def video_extractor(all_files, path):
                         os.system(command_r)
                         file_name = os.path.join(root, file_rename)
 
-                    command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/挑选结果' + '"'
+                    command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/视频挑选结果' + '"'
                     if os.system(command):
                         if win32api.GetFileAttributes(file_name.replace('\\', '/')) & 2:
                             win32api.SetFileAttributes(file_name.replace('\\', '/'), win32con.FILE_ATTRIBUTE_ARCHIVE)
@@ -170,6 +170,8 @@ def file_delete(all_files, path):
     failed_num = 0
 
     target_format = input("请输入需要删除的文件格式:")
+    if target_format == '':
+        target_format = 'NULL'
 
     all_path = os.walk(path)
     for root, dirs, files in all_path:
@@ -177,7 +179,7 @@ def file_delete(all_files, path):
             file_name = os.path.join(root, file)
 
             if not re.search('挑选结果', root) and not re.search('所有文件', root):
-                if re.search(target_format, file, re.I):
+                if re.search(target_format, file, re.I) and not re.search('py', file, re.I):
                     command = 'del ' + '"' + file_name + '"'
                     if os.system(command):
                         if win32api.GetFileAttributes(file_name.replace('\\', '/')) & 2:
@@ -204,10 +206,12 @@ def file_extractor(all_files, path):
     SameName_num = 0
 
     target_format = input("请输入需要挑选的文件格式:")
+    if target_format == '':
+        target_format = 'NULL'
 
-    folder = os.path.exists(path + '/挑选结果')
+    folder = os.path.exists(path + '/' + target_format + '挑选结果')
     if not folder:
-        os.mkdir('挑选结果')
+        os.mkdir(target_format + '挑选结果')
 
     all_path = os.walk(path)
     for root, dirs, files in all_path:
@@ -215,7 +219,7 @@ def file_extractor(all_files, path):
             file_name = os.path.join(root, file)
 
             if not re.search('挑选结果', root) and not re.search('所有文件', root):
-                if re.search(target_format, file, re.I):
+                if re.search(target_format, file, re.I) and not re.search('py', file, re.I):
 
                     if all_files.count(file) >= 2:
                         point_before = os.path.splitext(file)[0]
@@ -226,7 +230,7 @@ def file_extractor(all_files, path):
                         os.system(command_r)
                         file_name = os.path.join(root, file_rename)
 
-                    command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/挑选结果' + '"'
+                    command = 'move ' + '"' + file_name + '"' + ' ' + '"' + path + '/' + target_format + '挑选结果' + '"'
                     if os.system(command):
                         if win32api.GetFileAttributes(file_name.replace('\\', '/')) & 2:
                             win32api.SetFileAttributes(file_name.replace('\\', '/'), win32con.FILE_ATTRIBUTE_ARCHIVE)
@@ -241,28 +245,30 @@ def file_extractor(all_files, path):
 
 
 def delete_selected_folder(path):
-    import ctypes, sys
+    import ctypes
+    import sys
 
     if sys.version_info[0] == 3:
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
     else:  # in python2.x
         ctypes.windll.shell32.ShellExecuteW(None, u"runas", unicode(sys.executable), unicode(__file__), None, 1)
 
-    selected_folder=input('请输入当前目录下你想删除的文件夹名称（注意区分大小写）:')
-    command = 'rd /s/q "' + path +'/'+ selected_folder + '"'
+    selected_folder = input('请输入当前目录下你想删除的文件夹名称（注意区分大小写）:')
+    command = 'rd /s/q "' + path + '/' + selected_folder + '"'
 
-    if not os.system(command): #指令运行成功的话返回为0
+    if not os.system(command):  # 指令运行成功的话返回为0
         print('\n' + selected_folder + ' 文件夹删除成功')
     else:
         print('\n' + selected_folder + ' 文件夹删除失败')
-        
+
     files_filter(model=input("请输入文件批处理类型:"))
 
 
 def delete_all_folder(path):
-    confirm=input('你真的想删除当前目录下的所有文件夹吗？（请输入 Yes 进行确认）:')
+    confirm = input('你真的想删除当前目录下的所有文件夹吗？（请输入 Yes 进行确认）:')
     if confirm == 'Yes':
-        import ctypes, sys
+        import ctypes
+        import sys
 
         if sys.version_info[0] == 3:
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
@@ -311,7 +317,7 @@ def files_filter(model):
         os.system("pause")
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     print('输入: \n')
     print(' 1 为音频筛选;\n')
     print(' 2 为视频筛选;\n')
@@ -323,4 +329,3 @@ if __name__=='__main__':
     print(' 8 为删除当前目录的所有文件夹;\n')
     print('输入其他为退出\n')
     files_filter(model=input("请输入文件批处理类型:"))
-    
