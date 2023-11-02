@@ -1,0 +1,77 @@
+cmake_minimum_required(VERSION 3.8)
+
+# 项目的名字就是包名ros
+project(ros_learn LANGUAGES CXX)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED) # 话题的数据类型库
+find_package(example_interfaces REQUIRED) # 自定义数据类型
+
+# 打开项目和编辑之后记得保存一下,会自动更新当前的配置
+# 先写cmakelist,再去xml写包的引用(记得保存),最后写头文件的引用才会被检索到(add_executable(),ament_target_dependencies()为其参数内的文件添加头文件索引和库索引,消除其找不到头/库文件的错误,写完后保存一下即可)
+# 自动产生build/compile_commands.json文件,可用于迁移项目
+MESSAGE(STATUS "当前工程名为:" ${PROJECT_NAME})
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# 可执行文件的名名字就是节点的名字,一个项目可以有多个节点,也就是多个可执行文件
+# set(main_list src/main.cpp)
+# add_executable(main_node ${main_list})
+# ament_target_dependencies(main_node rclcpp) # 只是测试给main.cpp添加头/库文件
+# install(TARGETS
+# publisher_node
+# DESTINATION lib/${PROJECT_NAME} # 必须安装在这个目录下,要不然找不到编译的节点
+# )
+
+# 编译成可执行文件的文件中必须有且仅有一个main函数,不然报错
+add_executable(talker_node src/talker.cpp src/talker.h) 
+ament_target_dependencies(talker_node rclcpp std_msgs)
+install(TARGETS talker_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+add_executable(listener_node src/listener.cpp src/listener.h)
+ament_target_dependencies(listener_node rclcpp std_msgs)
+install(TARGETS listener_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+add_executable(server_node src/server.cpp src/server.h)
+ament_target_dependencies(server_node rclcpp example_interfaces)
+install(TARGETS server_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+add_executable(client_node src/client.cpp src/client.h)
+ament_target_dependencies(client_node rclcpp example_interfaces)
+install(TARGETS client_node 
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+
+  # the following line skips the linter which checks for copyrights
+  # comment the line when a copyright and license is added to all source files
+  set(ament_cmake_copyright_FOUND TRUE)
+
+  # the following line skips cpplint (only works in a git repo)
+  # comment the line when this package is in a git repo and when
+  # a copyright and license is added to all source files
+  set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package() # 这句话放在最后
+# colcon build --packages-select PROJECT_NAME
+# source install/setup.bash
+# ros0 run PROJECT_NAME test_node
+
+
+
