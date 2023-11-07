@@ -2,7 +2,7 @@
 # 注意!!!!!!! 路经中不要有中文(桌面文件夹为中文),不然colcon 编译报错
 mkdir -pv ./dev_ws/src
 cd ./dev_ws/src || exit  # z注意是在大工作空间下建立src再使用pkg创建包,最后在包之中的src文件夹编辑代码
-ros2 pkg create sub_project_name --build-type ament_cmake --dependencies rclcpp
+ros2 pkg create sub_project_name --node-name NODE_NAME --build-type ament_cmake --dependencies rclcpp --package-format 3
 # 使用包工具创建一个标准的包模板,自动配置其编译器等
 # git clone https://github.com/ros/ros_tutorials.git -b humble-devel
 # 初始化包安装器
