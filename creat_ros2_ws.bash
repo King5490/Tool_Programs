@@ -12,6 +12,10 @@ ros2 pkg create sub_project_name --node-name NODE_NAME --build-type ament_cmake 
 # 当上述l两个的官方命令不好使时，使用如下国内镜像代理的命令
 # sudo rosdepc init & rosdepc update
 # rosdepc install -i --from-path src --rosdistro 你的ros版本代号 -y
+# 手动安装依赖
+# sudo apt install ros-humble-$package_name 
+# $package_name 可以去ros包仓库中查找，但是仓库中包的名字中的下划线'_'需要使用'-'代替
+
 cd .. || exit
 bash source /opt/ros/humble/setup.bash
 # 编译之前必须再加载一次ros
