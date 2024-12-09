@@ -4,13 +4,13 @@ format rat
 
 syms G s
 
-G = (2*s^0)/(1*s^3+3*s^2+2*s+0);%系统开环(闭环)方程(不是多项式展开形式)
-[num_s,den_s] = numden(G);%提取系统方程的分子分母(输出的数组是符号型的需要数据转换)
+G = (2 * s ^ 0) / (1 * s ^ 3 + 3 * s ^ 2 + 2 * s + 0); %系统开环(闭环)方程(不是多项式展开形式)
+[num_s, den_s] = numden(G); %提取系统方程的分子分母(输出的数组是符号型的需要数据转换)
 
-num = double(coeffs(num_s,s,'all'));%系统开环函数分子(数据转换后)
-den = double(coeffs(den_s,s,'all'));%系统开环函数分母(数据转换后)
-num = num./den(1);%分子标准化
-den = den./den(1);%分母标准化
+num = double(coeffs(num_s, s, 'all')); %系统开环函数分子(数据转换后)
+den = double(coeffs(den_s, s, 'all')); %系统开环函数分母(数据转换后)
+num = num ./ den(1); %分子标准化
+den = den ./ den(1); %分母标准化
 
 % tf型转多项式
 % [num,den] = tfdata(sys);%提取tf型系统分子分母系数
@@ -18,37 +18,33 @@ den = den./den(1);%分母标准化
 % den_sym = poly2sym(den,s);%把分母系数转换为多项式
 % sys_sym = num_sym/den_sym;%得到系统对应的多项式
 
-
 % num = [0 2];%系统开环函数分子(系统方程已分解,可以直接得到)
 % den = [1,3,2,0];%系统开环函数分母(系统方程已分解,可以直接得到)
 
-w = logspace(-1,1,200);%10^-1到10^1之间对数规律取200个数
+w = logspace(-1, 1, 200); %10^-1到10^1之间对数规律取200个数
 
-figure(1),nyquist(num,den);%奈奎斯特
+figure(1), nyquist(num, den); %奈奎斯特
 
-[mag,phase,w] = bode(num,den,w);
-[Gm,Pm,Wx,Wc] = margin(mag,phase,w);
+[mag, phase, w] = bode(num, den, w);
+[Gm, Pm, Wx, Wc] = margin(mag, phase, w);
 % 增益或称幅值裕度（单位不是dB，想要dB为单位话用bode图）、相角裕度、相角交界频率（穿越频率）wx、截止（剪切）频率wc
 
-figure(2),bode(num,den);%伯德图
+figure(2), bode(num, den); %伯德图
 
-
-sys = tf(num,den);%系统方程
-sys1 = feedback(sys,1);%系统单位负反馈
-figure(3),step(sys1);%闭环单位阶跃响应;impulse(sys)单位冲击响应
-
+sys = tf(num, den); %系统方程
+sys1 = feedback(sys, 1); %系统单位负反馈
+figure(3), step(sys1); %闭环单位阶跃响应;impulse(sys)单位冲击响应
 
 % cloop()函数已弃用,建议用feedback()函数
 % [num1,den1] = cloop(num,den);%求闭环系统函数
 % figure(3);step(num1,den1);%闭环阶跃响应
 
 %求取稳态误差
-rs = tf([1],[1 0]) %输入的拉氏变换
-sys_fz=(1-sys)*tf([1 0],[1])*rs;%输出减去输入乘s
+rs = tf([1], [1 0]) %输入的拉氏变换
+sys_fz = (1 - sys) * tf([1 0], [1]) * rs; %输出减去输入乘s
 % Hs=tf([1],[1]);%Hs为反馈回路传递函数,单位负反馈为+1,,单位正反馈为-1
 % sys_fz = (1-sys)*tf([1 0],[1])*rs*Hs;%调整为从输入定义的稳态误差
-ess = dcgain(sys_fz)%相当于终值定理,从输出定义的稳态误差求取
-
+ess = dcgain(sys_fz) %相当于终值定理,从输出定义的稳态误差求取
 
 % 校正环节(或者额外增加的环节)
 % numc = [1];
@@ -68,7 +64,6 @@ ess = dcgain(sys_fz)%相当于终值定理,从输出定义的稳态误差求取
 % subplot(2,2,1),nyquist(numaf,denaf);
 % subplot(2,2,2),bode(numaf,denaf);
 % subplot(2,2,3),step(sysc);
-
 
 % *******其他常用函数*******(注意:有些函数的入口参数注意不能是符号型的而返回的是符号型的)
 
@@ -125,7 +120,6 @@ ess = dcgain(sys_fz)%相当于终值定理,从输出定义的稳态误差求取
 % den_sym = poly2sym(den,s);
 % sym_sys = num_sym/den_sym;
 % ess = limit(s*sym_sys,s,0) %终值定理求稳态误差(默认从输出定义)
-
 
 % [A,B,C,D] = tf2ss(num,den);%由系统方程的分子分母求状态空间表达式的4个矩阵
 % [num,den] = ss2tf(a,b,c,d);%上述逆运算

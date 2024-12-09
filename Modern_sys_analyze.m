@@ -4,74 +4,123 @@ format rat
 
 syms G s
 
-G = 6*(s+1)/(s*(s+2)*(s+3));
+G = 6 * (s + 1) / ((s + 1.1) * (s + 2) * (s + 3));
 
-[num_s,den_s] = numden(G);%提取系统方程的分子分母(输出的数组是符号型的需要数据转换)
-num = double(coeffs(num_s,s,'all'));%系统开环函数分子(数据转换后)
-den = double(coeffs(den_s,s,'all'));%系统开环函数分母(数据转换后)
-num = num./den(1);%分子标准化
-den = den./den(1);%分母标准化
-sys = tf(num,den);
+[num_s, den_s] = numden(G); %提取系统方程的分子分母(输出的数组是符号型的需要数据转换)
+num = double(coeffs(num_s, s, 'all')); %系统开环函数分子(数据转换后)
+den = double(coeffs(den_s, s, 'all')); %系统开环函数分母(数据转换后)
+num = num ./ den(1); %分子标准化
+den = den ./ den(1); %分母标准化
+sys = tf(num, den);
 
+[A, B, C, D] = tf2ss(num, den);
+sys_ss = ss(A, B, C, D); % 将传递函数模型转换为状态空间模型
+M = ctrb(A, B); %能控性分析 %也可用Wc = gram(sys,'c');
+M1 = rref(M); %化简矩阵为阶梯最简型
 
-[A,B,C,D] = tf2ss(num,den);
-M = ctrb(A,B);%能控性分析%也可用Wc = gram(sys,'c');
-M1 = rref(M);%化简矩阵为阶梯最简型
- if rank(M) == size(A)%求秩后比较
+if rank(M) == size(A) %求秩后比较
     Co = '能控'
- else
-     Co = '不能控'
- end
-N = obsv(A,C);%能观性分析%也可用Wo = gram(sys,'o');
-N1 = rref(N);%化简矩阵为阶梯最简型
-  if rank(N) == size(A)%求秩后比较
-    Ob = '能观'
- else
-     Ob = '不能观'
- end
-
-[Abar,Bbar,Cbar,T,K] = ctrbf(A,B,C,D);%能控性分解,Abar,Bbar,Cbar为变换后的矩阵,T为转换时的相似变换阵
-[abar,bbar,cbar,t,k] = obsvf(A,B,C,D);%能观性分解,abar,bbar,cbar为变换后的矩阵,T为转换时的相似变换阵
-% K(k)是一个行向量,是系统能控(观)矩阵各个块的秩,sum(K)为系统的可控(观)状态的数量
-
-sysr = minreal(sys);%最小实现的求取(sys可为任意系统型);sminreal(sys)会保留原ss系统阶数进行最小实现 
-
-if  Ob == '能观'
-
-	P = [-3 -4]%向量P中是期望的闭环极点
-
-	% G=(acker(A',C',P))'%求全维状态观测器增益矩阵
-	% G=(place(A',C',P))'%求全维状态观测器增益矩阵,与上函数差异见下文极点配置
-	
-	% *****以下为降维观测器的设计*****
-	
-	T = eye(size(A));%构造变换矩阵T,把原状态方程转化为C=[0,I]型
-	T(size(A,1),:) = C;
-	for n = 1:size(A,1)-1
-		L = logical(C);
-		L(n) =~ L(n);
-		T(n,:) = L;
-	end
-	T = inv(T);
-
-	[A1,B1,C1,D1] = ss2ss(A,B,C,D,inv(T))%转化后A1=[A11 A12;A21 A22],C1=[0,I]
-
-	n = find(C1);%自动求A11,A21
-	n = n(1)-1;
-	A11 = A1(1:n,1:n);
-	A21 = A1(n+1:size(A1,2),1:n);
-
-	% A11 = [0 0;1 0]%手动输入不能从输出y检测到的能观对
-	% A21 = [1 1]%手动输入不能从输出y检测到的能观对
-	
-	% G = (acker(A11',A21',P))'%降维观测器方程中的变换矩阵G
-	% G = (place(A11',A21',P))'%降维观测器方程中的变换矩阵G,与上函数差异见下文极点配置
-
 else
-     disp('*****此状态方程不能观,无法求取状态观测器*****')
-	 pause
+    Co = '不能控'
 end
 
+N = obsv(A, C); %能观性分析 %也可用Wo = gram(sys,'o');
+N1 = rref(N); %化简矩阵为阶梯最简型
+
+if rank(N) == size(A) %求秩后比较
+    Ob = '能观'
+else
+    Ob = '不能观'
+end
+
+% 判断系统的稳定性
+eigenvalues_A = eig(A);
+
+if all(real(eigenvalues_A) < 0)
+    disp('系统是稳定的');
+
+    % 计算可控性格拉姆矩阵
+    Wc = gram(sys_ss, 'c');
+
+    % 计算可控性格拉姆矩阵的特征值和特征向量
+    [Vc, Dc] = eig(Wc);
+
+    % 按特征值从大到小排列特征向量
+    [sorted_eigenvalues_c, idx_c] = sort(diag(Dc), 'descend');
+    sorted_Vc = Vc(:, idx_c);
+
+    % 输出结果，’*‘代表零
+    % disp('可控性格拉姆矩阵 Wc：');
+    % disp(Wc);
+    disp('可控性格拉姆矩阵的特征值（按降序排列）：');
+    disp(sorted_eigenvalues_c');
+    disp('可控性格拉姆矩阵的特征向量（按特征值降序排列）：');
+    disp(sorted_Vc);
+
+    % 计算观测性格拉姆矩阵
+    Wo = gram(sys_ss, 'o');
+
+    % 计算观测性格拉姆矩阵的特征值和特征向量
+    [Vo, Do] = eig(Wo);
+
+    % 按特征值从大到小排列特征向量
+    [sorted_eigenvalues_o, idx_o] = sort(diag(Do), 'descend');
+    sorted_Vo = Vo(:, idx_o);
+
+    % 输出结果，’*‘代表零
+    % disp('观测性格拉姆矩阵 Wo：');
+    % disp(Wo);
+    disp('观测性格拉姆矩阵的特征值（按降序排列）：');
+    disp(sorted_eigenvalues_o');
+    disp('观测性格拉姆矩阵的特征向量（按特征值降序排列）：');
+    disp(sorted_Vo);
+else
+    disp('系统是不稳定的，无法计算格拉姆矩阵');
+end
+
+[Abar, Bbar, Cbar, T, K] = ctrbf(A, B, C, D); %能控性分解,Abar,Bbar,Cbar为变换后的矩阵,T为转换时的相似变换阵
+[abar, bbar, cbar, t, k] = obsvf(A, B, C, D); %能观性分解,abar,bbar,cbar为变换后的矩阵,T为转换时的相似变换阵
+% K(k)是一个行向量,是系统能控(观)矩阵各个块的秩,sum(K)为系统的可控(观)状态的数量
+
+sysr = minreal(sys); %最小实现的求取(sys可为任意系统型);sminreal(sys)会保留原ss系统阶数进行最小实现
+
+if Ob == '能观'
+
+    P = [-3 -4] %向量P中是期望的闭环极点
+
+    % G=(acker(A',C',P))'%求全维状态观测器增益矩阵
+    % G=(place(A',C',P))'%求全维状态观测器增益矩阵,与上函数差异见下文极点配置
+
+    % *****以下为降维观测器的设计*****
+
+    T = eye(size(A)); %构造变换矩阵T,把原状态方程转化为C=[0,I]型
+    T(size(A, 1), :) = C;
+
+    for n = 1:size(A, 1) - 1
+        L = logical(C);
+        L(n) = ~L(n);
+        T(n, :) = L;
+    end
+
+    T = inv(T);
+
+    [A1, B1, C1, D1] = ss2ss(A, B, C, D, inv(T)) %转化后A1=[A11 A12;A21 A22],C1=[0,I]
+
+    n = find(C1); %自动求A11,A21
+    n = n(1) - 1;
+    A11 = A1(1:n, 1:n);
+    A21 = A1(n + 1:size(A1, 2), 1:n);
+
+    % A11 = [0 0;1 0]%手动输入不能从输出y检测到的能观对
+    % A21 = [1 1]%手动输入不能从输出y检测到的能观对
+
+    % G = (acker(A11',A21',P))'%降维观测器方程中的变换矩阵G
+    % G = (place(A11',A21',P))'%降维观测器方程中的变换矩阵G,与上函数差异见下文极点配置
+
+else
+    disp('*****此状态方程不能观,无法求取状态观测器*****')
+    pause
+end
 
 % 判断系统是否渐进稳定
 % P = lyap(A',eye(size(A)));n1=0;
@@ -89,9 +138,7 @@ end
 %	 pause
 % end
 
-
-
-% *******其他常用函数*******
+%% *******其他常用函数*******
 
 % G = C*inv(s*eye(size(A))-A)*B
 
@@ -132,7 +179,6 @@ end
 % K倍的单位斜坡输入响应
 % xt = eAt*x0 + (A^(-2)*(eAt-eye(size(A)))-A^(-t))*B*K
 
-
 % [Gc,T] = canon(sys,'type');%其中sys为原系统模型(tf型),而返回的As,Bs,Cs,Ds位指定的标准型的状态方程模型
 % T为变换矩阵(注意变换方程为：Xs=TX),这里的type为变换类型,有两个选项：
 % 'modal':模型标准型为对角标准型(对角线型); 'companion':模型标准型为友矩阵型(默认能控II型,不能控报错).
@@ -142,7 +188,6 @@ end
 % K = acker(A,B,P);%极点配置函数,向量P中是期望的闭环极点,不适用于多变量系统极点配置,适用于多重期望极点
 % K = place(A,B,P);%多变量系统极点配置,但不适用含有多重期望极点的问题;应注意 新的A矩阵 = A-B*K
 
-
 % initial(sys,x0);%绘制零输入相应曲线(sys为ss型系统),x0初始状态矩阵
 % [u,t] = gensig(type,tau,Tf,Ts);%生成指定的信号%type信号类型;tau信号周期;Tf持续时间(三个参数时省略);Ts采样时间;
 % lsim(sys,u,t);%绘制系统指定信号输入的相应图形
@@ -151,6 +196,8 @@ end
 % [V,D] = eig(A);%求矩阵的特征矩阵及特征值,对角矩阵D和矩阵V,其列是对应的右特征向量,使得 A*V = V*D。
 % Adet = det(A);%求方阵的行列式值
 % T = balance(sys.A);%改善A矩阵的条件(没啥用)
+
+% [sysb,g] = balreal(sys); %LTI系统参数根据格拉姆矩阵进行可控性和观测性的平�
 
 % u = [1,a2,a1,a0];%三阶友矩阵的原型,第一个元素必须是1
 % A = compan(u);%创建友矩阵
@@ -162,5 +209,3 @@ end
 
 % printsys(num,den,'s')%打印tf型系统方程
 % step(sys)%闭环单位阶跃响应;impulse(sys)%单位冲击响应
-
-
